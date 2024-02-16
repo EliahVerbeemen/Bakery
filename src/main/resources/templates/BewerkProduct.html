@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${product.getNaam()}"></title>
+</head>
+<body>
+<form action="#" th:action="@{/product/bewerken/__${productid}__ } " th:object="${product}" method="post">
+  <label for="naam">
+    Naam:
+  </label>
+<input id="naam" name="naam" th:value="${product.getNaam()}"></input>
+<table >
+
+  <tr th:each="stap,stat:${product.getStappenplan()}" > <td><input th:field="*{stappenplan[__${stat.index}__]}" th:value="${stap}"/></tr>
+
+
+</table>
+  <input  type="submit" name="add" value="Voeg stap toe"/>
+<table >
+  <thead><tr><td>Ingredient</td><td><td>Hoeveelheid</td><td>Eenheid</td></tr></thead>
+
+  <tr th:each="ing,entryStat:${product.getRecept()}" ><td>
+
+    <select>
+<option th:each="ing:${ingredienten}" th:text="${ing.getNaam()}" th:value="${ing}" >
+  <!--<th:selected="${product.}"  th:field="${ing.key}"-->
+
+
+
+
+</option>
+<option>
+
+</option>
+
+  </select></td><td><input th:value="${ing.value}"></td></tr>
+
+
+
+
+</table>
+<input type="submit" value="Voeg ingrediënt toe">
+
+  <button type="submit"> Bewaren</button>
+</form>
+</body>
+</html>
