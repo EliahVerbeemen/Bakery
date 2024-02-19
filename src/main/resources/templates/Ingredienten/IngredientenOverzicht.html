@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title >Ingrediënten</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr><td>Naam</td><td>Beschrijving</td></tr>
+
+    </thead>
+    <tbody>
+
+    <tr  th:each="ingr,stat:${Ingredienten}" >
+        <td th:id="tonen+${ingr.productId}">
+            <div>
+                <p th:text="${ingr.naam}"> ></p>
+                <p th:text="${ingr.beschrijving}"> ></p>
+
+
+          <button th:attr="onclick=${' Bewerken('+  ingr.productId +')'}">Bewerken</button>
+
+
+            </div>
+        </td>
+<td>
+
+</td>
+
+                <!--
+
+-->
+
+
+    </tr>
+
+    </tbody>
+
+</table>
+
+<button th:onClick="nieuwIng()">Nieuw Ingredient</button>
+<form action="#" th:action="@{/ingredienten/ingredient} " id="nieuw" style="display: none" th:object="${nieuwIngredient}" method="post" >
+    <label for="naam">Naam</label>
+    <input id="naam" name="Naam" th:field="*{naam}"/>
+    <label for="beschrijving">beschrijving</label>
+    <input id="beschrijving" name="Beschrijving"   th:field="*{beschrijving}"/>
+    <button type="submit">Opslaan</button>
+</form>
+</body>
+<script>
+
+    function nieuwIng() {
+        document.getElementById("nieuw").style.display="block";
+    }
+
+    function Bewerken( productId){
+//https://www.baeldung.com/spring-thymeleaf-css-js
+
+        window.location.href="/ingredienten/ingredient/"+productId;
+
+    }
+
+</script>
+
+</html>

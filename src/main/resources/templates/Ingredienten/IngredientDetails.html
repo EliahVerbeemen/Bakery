@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${Ingredient.naam}"></title>
+
+
+</head>
+<form th:object="${Ingredient}" action="#" th:action="@{/ingredienten/ingredient}" method="post">
+    <label>Naam:
+        <input th:field="${Ingredient.naam}" th:value="${Ingredient.naam}"/>
+    </label>
+    <label> Beschrijving:
+        <textarea th:field="${Ingredient.beschrijving}" th:text="${Ingredient.beschrijving}"></textarea>
+    </label>
+    <button type="submit">
+        Bewaren
+    </button>
+    <input type="submit"  th:formaction="'/ingredienten/ingredient/verwijderen/'+${Ingredient.productId}" formmethod="get" value="Verwijderen">
+</form>
+<body>
+
+</body>
+
+</html>

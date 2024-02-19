@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Producten</title>
+</head>
+<body>
+
+<table>
+    <thead>
+    <tr>
+    <th>Naam</th>
+    </tr>
+    </thead>
+    <tbody>
+
+   <tr th:each="product:${Producten}">
+    <td th:text="${product.getNaam()}"></td>
+
+
+    <td><button th:attr="onclick=${' GaNaarDetailPagina('+  product.getProductId() +')'}">detailPagina</button></td>
+</tr>
+
+    </tbody>
+</table>
+
+<button th:onClick="NieuwProductAanmaken()"> Nieuw Product</button>
+
+</body>
+
+<script th:inline="javascript">
+
+    function GaNaarDetailPagina(productId){
+
+        console.log(productId)
+        window.location.href="/producten/product/detail/"+productId;
+
+    }
+
+    function NieuwProductAanmaken(){
+
+        window.location.href="/producten/product/bewerk";
+
+    }
+
+</script>
+</html>
