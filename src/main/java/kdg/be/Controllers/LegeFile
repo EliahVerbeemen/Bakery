@@ -6,10 +6,10 @@
         Ingredient nieuwIngredient=new Ingredient();
         nieuwIngredient.setNaam("testIngredient");
         nieuwIngredient.setBeschrijving("Ik ben en testIngredient");
-        ingredientRepository.save(nieuwIngredient);
-        Ingredient ing=ingredientRepository.findAll().get(0);
+        IIngredientRepository.save(nieuwIngredient);
+        Ingredient ing=IIngredientRepository.findAll().get(0);
 
         nieuwProduct.getSamenstelling().put(ing.getProductId(),50d);
 
 
-        productRepository.save(nieuwProduct);*/
+        IProductRepository.save(nieuwProduct);*/
