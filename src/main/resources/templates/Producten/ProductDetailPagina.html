@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${Product.getNaam()}"></title>
+    <title th:text="${Product.name}"></title>
 </head>
 <body>
-<h1 th:text="${Product.getNaam()}"></h1>
+<h1 th:text="${Product.name}"></h1>
 
 <table>
     <thead>
     <tr th:each="ingr:${Product.getSamenstelling()}">
-<td th:text="${ingr.key.getNaam()}"></td>
+<td th:text="${ingr.key.name}"></td>
 <td th:text="${ingr.value}"></td>
     </tr>
 
@@ -27,17 +27,21 @@
 
 
 </ol>
+<p>Ingrediënten</p>
 <table>
     <tr th:each="ingPaar:${Product.getSamenstelling()}">
-        <td th:text="${ingPaar.key.getNaam()}"></td>
+        <td th:text="${ingPaar.key.getName()}"></td>
         <td th:text="${ingPaar.value}"></td>
 
     </tr>
 
 </table>
-<button th:if="${Product.getProductStatus()!=T(kdg.be.Models.ProductStatus).Finaal}"
+<button th:if="${Product.getProductStatus()!=T(kdg.be.Models.ProductState).Finaal}"
 
-        th:attr="onclick=${' GaNaarBewerkPagina('+  Product.getProductId() +')'}">Product Bewerken</button>
+        th:attr="onclick=${' GaNaarBewerkPagina('+  Product.getProductId() +')'}">Product Bewerken
+</button>
+
+<p th:text="${Product.productStatus}"></p>
 </body>
 <script th:inline="javascript">
 

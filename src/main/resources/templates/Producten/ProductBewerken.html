@@ -2,14 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${Product.getNaam()?:'Nieuw Product'}"></title>
+    <title th:text="${Product.name?:'Nieuw Product'}"></title>
 </head>
 <body>
 
 <form action="#" th:object="${Product}" th:action="@{'/producten/product/bewerk'+${Product.getProductId()!=null?'/'+Product.getProductId():''}}" method="post">
 
+
+
+
     <label> Naam:
-        <input th:field="${Product.naam}"/>
+        <input th:field="${Product.name}"/>
     </label>
     <p>Ingrediënten</p>
     <ul>
@@ -29,25 +32,26 @@
     </label>
     <table>
         <tr>
-            <td th:each="ing,stat:${Product.getSamenstelling()}">
-    <select >
-        <option th:each="ing,stat:${ingredienten}" th:text="${ing.getNaam()}">
+            <td th:each="ing,stat:${Product.samenstelling.entrySet()}" >
 
+    <select th:each="pr:${Product.samenstelling}">
+        <option th:each="ingr,stat:${ingredienten}" th:text="${ingr.name}" th:value="${ingr.getProductId()}">
+            <!--th:field="${Product.samenstelling.get(__${ing.key}__)}"-->
 
         </option>
 
     </select>
-                <input th:field="${Product.getSamenstelling().get(__${ing.value}__)}"/>
+           <!--     <input th:field="${Product.samenstelling.get(__${ing}__)}"/>-->
             </td>
         </tr>
     </table>
-    <button th:if="${Product.getProductStatus()==T(kdg.be.Models.ProductStatus).Finaal}"
 
-            th:attr="onclick=${' DeactiveerProduct('+  Product.getProductId() +')'}">Product deactiveren</button>
+        <button th:if="${Product.getProductStatus()==T(kdg.be.Models.ProductState).Nieuw}" type="submit" name="finaliseer"     >product finaliseren</button>
 
-    <button th:if="${Product.getProductStatus()==T(kdg.be.Models.ProductStatus).Nieuw}"
+    <button type="submit" name="deactiveer"
 
-            th:attr="onclick=${' FinaliseerProduct('+  Product.getProductId() +')'}">Product finaliseren</button>
+            >"product deactiveren"</button>
+
 
     <button type="submit">Opslaan</button>
 
@@ -55,8 +59,8 @@
 
 
 </form>
-<script>
 
+    <script th:inline="javascript">
   function  DeactiveerProduct(productId){
 
       window.location.href="/producten/product/deactiveren/"+productId

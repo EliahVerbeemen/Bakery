@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 
-import static kdg.be.Models.ProductStatus.Finaal;
-import static kdg.be.Models.ProductStatus.Nieuw;
+import static kdg.be.Models.ProductState.Nieuw;
 
 @Entity
 public class Product {
@@ -18,7 +17,7 @@ public class Product {
     @GeneratedValue
     private Long ProductId;
 
-    private String Naam;
+    private String name;
 
     @ElementCollection
     private List<String> Stappenplan=new ArrayList<>();
@@ -27,42 +26,48 @@ public class Product {
 private Map<Ingredient, Double>Samenstelling=new HashMap<>();
 
     public Map<Ingredient, Double> getSamenstelling() {
-        return Samenstelling;
+        return (Map<Ingredient, Double>) Samenstelling;
     }
 
     public void setSamenstelling(Map<Ingredient, Double> samenstelling) {
         Samenstelling = samenstelling;
     }
 
-    public ProductStatus get_ProductStatus() {
+    public ProductState get_ProductStatus() {
         return _ProductStatus;
     }
 
-    public void set_ProductStatus(ProductStatus _ProductStatus) {
+    public void set_ProductStatus(ProductState _ProductStatus) {
         this._ProductStatus = _ProductStatus;
     }
 
-    private ProductStatus _ProductStatus= Nieuw;
+    private ProductState _ProductStatus= Nieuw;
 
 
-
+    public String getName() {
+        return name;
+    }
 
     public Product(){
 
     }
 
 
-    public Product(String naam, List<String> stappenplan) {
-        Naam = naam;
+    public Product(String name, List<String> stappenplan) {
+        this.name = name;
         Stappenplan = stappenplan;
 
     }
-
-    public ProductStatus getProductStatus() {
+    public Product(String name, List<String> stappenplan, Map<Ingredient,Double> recepy) {
+        this.name = name;
+        Stappenplan = stappenplan;
+this.Samenstelling=recepy;
+    }
+    public ProductState getProductStatus() {
         return _ProductStatus;
     }
 
-    public void setProductStatus(ProductStatus productStatus) {
+    public void setProductStatus(ProductState productStatus) {
         _ProductStatus = productStatus;
     }
 
@@ -78,12 +83,9 @@ private Map<Ingredient, Double>Samenstelling=new HashMap<>();
         ProductId = productId;
     }
 
-    public String getNaam() {
-        return Naam;
-    }
 
-    public void setNaam(String naam) {
-        Naam = naam;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<String> getStappenplan() {

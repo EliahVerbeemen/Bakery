@@ -1,13 +1,13 @@
 package kdg.be.Models;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-
-import java.util.List;
+import kdg.be.Deserializers.IngredientDeserializer;
 
 @Entity
+//@JsonDeserialize(using= IngredientDeserializer.class)
 public class Ingredient {
 
     @Id
@@ -15,22 +15,20 @@ public class Ingredient {
     private Long productId;
 
 
-    private String Naam;
+    private String name;
 
 
-
-    private String Beschrijving;
-
+    private String description;
 
 
-
-    public Ingredient(String naam,String beschrijving){
-this.Naam=naam;
-this.Beschrijving=beschrijving;
+    public Ingredient(String name, String description) {
+        this.name = name;
+        this.description = description;
 
     }
-    public Ingredient(){}
 
+    public Ingredient() {
+    }
 
 
     public Long getProductId() {
@@ -41,23 +39,35 @@ this.Beschrijving=beschrijving;
         this.productId = productId;
     }
 
-    public String getNaam() {
-        return Naam;
+    public String getName() {
+        return name;
     }
 
-    public void setNaam(String naam) {
-        Naam = naam;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getBeschrijving() {
-        return Beschrijving;
+        return description;
     }
 
     public void setBeschrijving(String beschrijving) {
-        Beschrijving = beschrijving;
+        description = beschrijving;
     }
 
+    @Override
+    public int hashCode() {
+        return this.name.hashCode() + this.description.hashCode();
+    }
 
-
-
+    @Override
+    public boolean equals(Object obj) {
+        if(obj ==null)return false;
+        if(obj.getClass()!= Ingredient.class)return false;
+        return this.productId==((Ingredient) obj).productId; /*(((Ingredient) obj).getNaam().equals(this.getNaam())
+        && (((Ingredient) obj).getBeschrijving().equals(this.getBeschrijving())));*/
+    }
 }
+
+
+

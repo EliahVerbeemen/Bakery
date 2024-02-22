@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${Product.getNaam()?:'Nieuw Product'}"></title>
+    <title th:text="${Product.name?:'Nieuw Product'}"></title>
 </head>
 <body>
 
 <form action="#" th:object="${Product}" th:action="@{'/producten/product/'+${Product.getProductId()!=null?Product.getProductId()+'/':''}+'bewerk' }" method="post">
 
     <label> Naam:
-        <input th:field="${Product.naam}"/>
+        <input th:field="${Product.getName()}"/>
     </label>
     <p>Ingrediënten</p>
     <ul>

@@ -31,7 +31,7 @@ model.addAttribute("Ingredienten",ing);
 Ingredient nieuwIngredient= new Ingredient();
     model.addAttribute("nieuwIngredient",nieuwIngredient);
 
-    return "Ingredienten/IngredientenOverzicht";
+    return "Ingredienten/IngredientenOverview";
 }
 
     @GetMapping(value={"/ingredienten/ingredient/{ingredientId}"})
@@ -39,6 +39,7 @@ Ingredient nieuwIngredient= new Ingredient();
     Optional<Ingredient> ingredient=  IIngredientRepository.findById(ingredientId);
     if(ingredient.isPresent()){
         model.addAttribute("Ingredient",ingredient.get());
+        model.addAttribute("IngredientId",ingredientId);
         return "Ingredienten/IngredientDetails";
     }
     else{
@@ -47,25 +48,51 @@ Ingredient nieuwIngredient= new Ingredient();
     }
     }
 
+    @PostMapping(value={"/ingredienten/ingredient/create"})
+    public ModelAndView NieuwIngredient(Ingredient ingredient, @PathVariable(required = false) Long ingredientId) {
+        System.out.println(ingredient.getBeschrijving());
+        System.out.println(ingredient.getName());
 
-    @PostMapping(value={"/ingredienten/ingredient","/Ingredienten/ingredient/{ingredientId}"})
-    public ModelAndView BewaarIngredient(Ingredient ingredient, @PathVariable(required = false) Long ingredientId){
-   System.out.println("save");
-    IIngredientRepository.save(ingredient);
-        ModelAndView modelAndView=new ModelAndView("Ingredienten/IngredientenOverzicht");
-        Ingredient nieuwIngredient=new Ingredient("testje","testje2");
-        modelAndView.addObject("nieuwIngredient",new Ingredient());
-        List<Ingredient> ing= IIngredientRepository.findAll();
-        modelAndView.addObject("Ingredienten",ing);
+        IIngredientRepository.save(ingredient);
+        ModelAndView modelAndView = new ModelAndView("Ingredienten/IngredientenOverview");
+       List<Ingredient> ingredienten= IIngredientRepository.findAll();
+        modelAndView.addObject("Ingredienten",ingredienten);
 
 
         return modelAndView;
     }
+
+
+    @PostMapping(value={"/ingredienten/ingredient/update/{ingredientId}"})
+    public ModelAndView BewaarIngredient(Ingredient ingredient, @PathVariable(required = false) Long ingredientId){
+   System.out.println(ingredientId);
+   ModelAndView modelAndView=new ModelAndView();
+    Optional<Ingredient> optioneelIngredient= IIngredientRepository.findById(ingredientId);
+    if(optioneelIngredient.isPresent()) {
+        modelAndView.setViewName("IngredientenOverwiew");
+        Ingredient oudIngredient=optioneelIngredient.get();
+        oudIngredient.setName(ingredient.getName());
+        oudIngredient.setBeschrijving(ingredient.getBeschrijving());
+        IIngredientRepository.save(oudIngredient);
+      //  Ingredient nieuwIngredient = new Ingredient("testje", "testje2");
+        modelAndView.addObject("nieuwIngredient", new Ingredient());
+        List<Ingredient> ing = IIngredientRepository.findAll();
+        modelAndView.addObject("Ingredienten", ing);
+    }
+    else{
+        modelAndView.setViewName("errorPagina");
+
+    }
+
+
+        return modelAndView;
+
+    }
     @GetMapping(value={"/ingredienten/ingredient/verwijderen/{productId}"})
-    public ModelAndView VerwijderIngredient(Ingredient ingredient, @PathVariable(required = true) Long productId ){
+    public ModelAndView VerwijderIngredient( @PathVariable(required = true) Long productId ){
        IIngredientRepository.deleteById(productId);
 List<Ingredient> ingredienten= IIngredientRepository.findAll();
-ModelAndView modelAndView=new ModelAndView("Ingredienten/IngredientenOverzicht");
+ModelAndView modelAndView=new ModelAndView("IngredientenOverwiew");
 modelAndView.addObject("Ingredienten",ingredienten);
         modelAndView.addObject("nieuwIngredient",new Ingredient());
 

@@ -4,44 +4,39 @@ import kdg.be.Managers.IIngredientManager;
 import kdg.be.Managers.IProductManager;
 import kdg.be.Models.Ingredient;
 import kdg.be.Models.Product;
-import kdg.be.Models.ProductStatus;
+import kdg.be.Models.ProductState;
+import kdg.be.RabbitMQ.RabbitSender;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class ProductController {
     private IIngredientManager ingredientManager;
     private IProductManager productManager;
 
-    public ProductController(IIngredientManager ingredientManager, IProductManager productManager) {
+    private  RabbitSender rabbitSender;
+//Modelbinding vb
+    //Controller advice vb
+    private final Logger logger= LoggerFactory.getLogger(ProductController.class);
+    public ProductController(IIngredientManager ingredientManager, IProductManager productManager, RabbitSender rabbitSender) {
 
         this.ingredientManager = ingredientManager;
         this.productManager = productManager;
+        this.rabbitSender=rabbitSender;
     }
 
     @GetMapping("/producten")
     public String AlleProducten(Model model) {
-        Product nieuwProduct = new Product();
-        nieuwProduct.setNaam("testNaam");
-        ArrayList<String> stappenplan = new ArrayList<>();
-        stappenplan.add("Voeg dan nu de bloem toe");
-        nieuwProduct.setStappenplan(stappenplan);
-        Ingredient nieuwIngredient = new Ingredient();
-        nieuwIngredient.setNaam("testIngredient");
-        nieuwIngredient.setBeschrijving("Ik ben en testIngredient");
-        List<Ingredient> ingredients = ingredientManager.getAllIngredients();
-//nieuwProduct.getSamenstelling().add(new Product_Ingredient(nieuwProduct,ing,50));
 
-
-        productManager.saveProduct(nieuwProduct);
-
-
+logger.info("test");
         List<Product> alleProducten = productManager.getAllProducts();
         System.out.println(alleProducten.size());
         model.addAttribute("Producten", alleProducten);
@@ -68,9 +63,10 @@ public class ProductController {
     }
 
 
+
     @GetMapping(value = {"/producten/product/bewerk", "/producten/product/bewerk/{productId}"})
     public String ProductBewerkPagina(Model model, @PathVariable(required = false) Long productId) {
-
+System.out.println("gesaved");
 
         if (productId != null) {
             Optional<Product> mogelijkProduct = productManager.getProductById(productId);
@@ -96,54 +92,13 @@ public class ProductController {
         }
 
     }
-
-    @PostMapping(value = {"producten/product/bewerk", "/producten/product/bewerk/{productId}"})
-    public ModelAndView ProductOpslaan(Product product) {
-        productManager.saveProduct(product);
-        List<Product> producten = productManager.getAllProducts();
-
-        ModelAndView modelAndView = new ModelAndView("Producten/ProductenOverzicht");
-        modelAndView.addObject("Producten", producten);
-        modelAndView.addObject("Product", product);
-        return modelAndView;
-    }
-
-    @PostMapping(value = {"producten/product/bewerk", "/producten/product/bewerk/{productId}"}, params = "stap=toevoegen")
-    public ModelAndView VoegStapToe(Product product) {
-
-        product.getStappenplan().add("");
-        ModelAndView modelAndView = new ModelAndView("Producten/ProductBewerken");
-        modelAndView.addObject("Product", product);
-        return modelAndView;
-    }
-
-    @GetMapping(value = {"/producten/product/deactiveren/{productId}"})
-    public ModelAndView DeactiveerProduct(@PathVariable Long productId) {
-        System.out.println("deactiveer");
-        Optional<Product> optioneelProduct = productManager.getProductById(productId);
-        if (optioneelProduct.isPresent()) {
-            Product product = optioneelProduct.get();
-
-            product.setProductStatus(ProductStatus.Gedeactiveerd);
-            productManager.saveProduct(product);
-            ModelAndView modelAndView = new ModelAndView("/Producten/productenOverzicht");
-            modelAndView.addObject("Producten", productManager.getAllProducts());
-            modelAndView.addObject("Product", new Product());
-            return modelAndView;
-
-        } else {
-            return new ModelAndView("errorPagina");
-        }
-
-    }
-
-    @GetMapping("/producten/product/finaliseer/{productId}")
-    public ModelAndView FinaliseerProduct(@PathVariable Long productId) {
+    @PostMapping(value = {"producten/product/bewerk", "/producten/product/bewerk/{productId}"},params = "finaliseer")
+    public ModelAndView FinaliseerProduct(Product binnekomendProduct) {
         System.out.println("Finaliseer");
-        Optional<Product> optioneelProduct = productManager.getProductById(productId);
+        Optional<Product> optioneelProduct = productManager.getProductById(binnekomendProduct.getProductId());
         if (optioneelProduct.isPresent()) {
             Product product = optioneelProduct.get();
-            product.setProductStatus(ProductStatus.Finaal);
+            product.setProductStatus(ProductState.Finaal);
             productManager.saveProduct(product);
 
             ModelAndView modelAndView = new ModelAndView("/Producten/ProductenOverzicht");
@@ -156,4 +111,57 @@ public class ProductController {
 
         }
     }
+
+
+    @GetMapping(value = {"producten/product/bewerk", "/producten/product/bewerk/{productId}"}, params = "deactiveer")
+    public ModelAndView DeactiveerProduct(@PathVariable Long productId) {
+        System.out.println("deactiveer");
+        Optional<Product> optioneelProduct = productManager.getProductById(productId);
+        if (optioneelProduct.isPresent()) {
+            Product product = optioneelProduct.get();
+
+            product.setProductStatus(ProductState.Gedeactiveerd);
+            productManager.saveProduct(product);
+            ModelAndView modelAndView = new ModelAndView("/Producten/ProductenOverzicht");
+            modelAndView.addObject("Producten", productManager.getAllProducts());
+            modelAndView.addObject("Product", new Product());
+            return modelAndView;
+
+        } else {
+            return new ModelAndView("errorPagina");
+        }
+
+    }
+
+    @PostMapping(value = {"producten/product/bewerk", "/producten/product/bewerk/{productId}"})
+    public ModelAndView ProductOpslaan(Product product) {
+
+        System.out.println(product.getName());
+        productManager.saveProduct(product);
+        List<Product> producten = productManager.getAllProducts();
+
+        ModelAndView modelAndView = new ModelAndView("Producten/ProductenOverzicht");
+        modelAndView.addObject("Producten", producten);
+        modelAndView.addObject("Product", product);
+        return modelAndView;
+    }
+
+
+    @PostMapping(value = {"producten/product/bewerk", "/producten/product/bewerk/{productId}"}, params = "stap=toevoegen")
+    public ModelAndView VoegStapToe(Product product) {
+
+        product.getStappenplan().add("");
+        ModelAndView modelAndView = new ModelAndView("Producten/ProductBewerken");
+        modelAndView.addObject("Product", product);
+        return modelAndView;
+    }
+
+
+    @GetMapping("/test")
+    public String test(){
+      this.rabbitSender.sendNewRecepy();
+return "errorPagina";
+    }
+
 }
+

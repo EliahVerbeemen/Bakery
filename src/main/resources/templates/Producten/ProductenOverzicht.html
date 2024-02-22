@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Producten</title>
+    <title>Products</title>
 </head>
 <body>
 
 <table>
     <thead>
     <tr>
-    <th>Naam</th>
+    <th>Name</th>
     </tr>
     </thead>
     <tbody>
 
    <tr th:each="product:${Producten}">
-    <td th:text="${product.getNaam()}"></td>
+    <td th:text="${product.name}"></td>
 
 
     <td><button th:attr="onclick=${' GaNaarDetailPagina('+  product.getProductId() +')'}">detailPagina</button></td>

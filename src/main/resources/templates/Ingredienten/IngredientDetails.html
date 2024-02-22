@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${Ingredient.naam}"></title>
+    <title th:text="${Ingredient.name}"></title>
 
 
 </head>
-<form th:object="${Ingredient}" action="#" th:action="@{/ingredienten/ingredient}" method="post">
+<form th:object="${Ingredient}" action="#" th:action="@{/ingredienten/ingredient/update/__${IngredientId}__}" method="post">
     <label>Naam:
-        <input th:field="${Ingredient.naam}" th:value="${Ingredient.naam}"/>
+        <input th:field="${Ingredient}" th:value="${Ingredient}"/>
     </label>
-    <label> Beschrijving:
-        <textarea th:field="${Ingredient.beschrijving}" th:text="${Ingredient.beschrijving}"></textarea>
+    <label> Description:
+        <textarea th:field="${Ingredient}" th:text="${Ingredient}"></textarea>
     </label>
     <button type="submit">
         Bewaren
