@@ -16,6 +16,7 @@ public class Batch {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate batchdatum;
 
+   //Moet minstens 3 toestanden kennem openstaan , in bereiding en  bereid.
     private static boolean InPreparation=false;
 
     public boolean isInPreparation() {

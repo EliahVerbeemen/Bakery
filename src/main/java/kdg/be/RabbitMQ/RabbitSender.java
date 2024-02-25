@@ -3,6 +3,7 @@ package kdg.be.RabbitMQ;
 
 //Klasse om nieuwe recepies te zenden
 
+import kdg.be.Managers.ProductManager;
 import kdg.be.Models.Ingredient;
 import kdg.be.Models.Product;
 import org.slf4j.Logger;
@@ -27,14 +28,11 @@ public class RabbitSender {
 
     }
 
-    public void sendNewRecepy(/*Product product*/){
-        HashMap<Ingredient,Double> composition=new HashMap<>();
-        composition.put(new Ingredient("testIgredient","testBeschrijving"),50d);
-        composition.put(new Ingredient("testIgredient2","testBeschrijving"),50d);
-        Product product=new Product("testRecept", List.of("testBeschrijving"), composition
-        );
+    public void sendNewRecepy(Product product){
+
         System.out.println(product.getName());
-        rabbitTemplate.convertAndSend(product);
+      //Voo recepy gebruik een fanout en geen
+        rabbitTemplate.convertAndSend("newRecepyExchange","newRecepiesQueue",product);
 
     }
 

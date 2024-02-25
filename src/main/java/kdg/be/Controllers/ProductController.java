@@ -159,7 +159,15 @@ System.out.println("gesaved");
 
     @GetMapping("/test")
     public String test(){
-      this.rabbitSender.sendNewRecepy();
+        HashMap<Ingredient,Double> composition=new HashMap<>();
+      Ingredient ingredientOne=  this.ingredientManager.saveIngredient(new Ingredient("testIgredient","testBeschrijving"));
+      Ingredient ingredientTwo= this.ingredientManager.saveIngredient(new Ingredient("testIgredient2","testBeschrijving"));
+        composition.put(ingredientOne,50d);
+        composition.put(ingredientTwo,50d);
+        Product product=this.productManager.saveProduct(new Product("testRecept", List.of("testBeschrijving"), composition)
+        );
+
+      this.rabbitSender.sendNewRecepy(product);
 return "errorPagina";
     }
 

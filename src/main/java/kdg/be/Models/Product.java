@@ -1,6 +1,8 @@
 package kdg.be.Models;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
+import kdg.be.Deserializers.IngredientDeserializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +26,7 @@ public class Product {
 
     @ElementCollection
 private Map<Ingredient, Double>Samenstelling=new HashMap<>();
-
+   // @JsonDeserialize(keyUsing = IngredientDeserializer.class)
     public Map<Ingredient, Double> getSamenstelling() {
         return (Map<Ingredient, Double>) Samenstelling;
     }

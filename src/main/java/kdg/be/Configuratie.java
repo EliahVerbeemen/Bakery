@@ -70,7 +70,7 @@ private RabbitSender rabbitSender;
            BatchProduct batchProduct= IbatchproductManager.save(new BatchProduct(nieuwProduct));
             batchproduct.add(batchProduct);
             iBatchManager.save(new Batch(LocalDate.now(), batchproduct));
-            rabbitSender.sendNewRecepy();
+          //  rabbitSender.sendNewRecepy();
         }
     }
 
