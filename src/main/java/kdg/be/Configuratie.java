@@ -9,10 +9,6 @@ import kdg.be.Models.BatchProduct;
 import kdg.be.Models.Ingredient;
 import kdg.be.Models.Product;
 import kdg.be.RabbitMQ.RabbitSender;
-import kdg.be.Repositories.IBatchproductRepository;
-import kdg.be.Repositories.IIngredientRepository;
-import kdg.be.Repositories.IProductRepository;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -51,7 +47,7 @@ private RabbitSender rabbitSender;
             nieuwProduct.setName("testNaam");
             ArrayList<String> stappenplan = new ArrayList<>();
             stappenplan.add("Voeg dan nu de bloem toe");
-            nieuwProduct.setStappenplan(stappenplan);
+            nieuwProduct.setSteps(stappenplan);
      /*   Ingredient nieuwIngredient = new Ingredient();
         nieuwIngredient.setNaam("testIngredient");
         nieuwIngredient.setBeschrijving("Ik ben en testIngredient");*/
@@ -61,8 +57,8 @@ private RabbitSender rabbitSender;
             HashMap<Ingredient,Double> ingredientenVooroorbeeld=new HashMap<>();
 
             ingredientenVooroorbeeld.put(ingredients.get(0),50d);
-            nieuwProduct.setSamenstelling(ingredientenVooroorbeeld);
-            System.out.println(nieuwProduct.getSamenstelling().size());
+            nieuwProduct.setComposition(ingredientenVooroorbeeld);
+            System.out.println(nieuwProduct.getComposition().size());
 //nieuwProduct.getSamenstelling().add(new Product_Ingredient(nieuwProduct,ing,50));
 
             productManager.saveProduct(nieuwProduct);

@@ -1,10 +1,8 @@
 package kdg.be.Models;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import kdg.be.Deserializers.IngredientDeserializer;
 
 @Entity
 //@JsonDeserialize(using= IngredientDeserializer.class)
@@ -12,7 +10,7 @@ public class Ingredient {
 
     @Id
     @GeneratedValue
-    private Long productId;
+    private Long ingredientId;
 
 
     private String name;
@@ -31,12 +29,12 @@ public class Ingredient {
     }
 
 
-    public Long getProductId() {
-        return productId;
+    public Long getIngredientId() {
+        return ingredientId;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setIngredientId(Long productId) {
+        this.ingredientId = productId;
     }
 
     public String getName() {
@@ -64,7 +62,7 @@ public class Ingredient {
     public boolean equals(Object obj) {
         if(obj ==null)return false;
         if(obj.getClass()!= Ingredient.class)return false;
-        return this.productId==((Ingredient) obj).productId; /*(((Ingredient) obj).getNaam().equals(this.getNaam())
+        return this.ingredientId ==((Ingredient) obj).ingredientId; /*(((Ingredient) obj).getNaam().equals(this.getNaam())
         && (((Ingredient) obj).getBeschrijving().equals(this.getBeschrijving())));*/
     }
 }

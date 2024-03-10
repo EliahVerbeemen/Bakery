@@ -20,7 +20,7 @@ public class BatchManager implements IBatchManager{
   }
 
     @Override
-    public Optional<Batch> VindBatchOpDatum(LocalDate localDate) {
+    public Optional<Batch> findBatchByDate(LocalDate localDate) {
         return iBatchRepository.findBatchByBatchdatum(localDate);
     }
 

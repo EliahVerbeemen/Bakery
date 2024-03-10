@@ -6,37 +6,40 @@ import kdg.be.Models.Ingredient;
 import kdg.be.Models.Product;
 import kdg.be.Models.ProductState;
 import kdg.be.RabbitMQ.RabbitSender;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 
 @Controller
 public class ProductController {
-    private IIngredientManager ingredientManager;
-    private IProductManager productManager;
-
-    private  RabbitSender rabbitSender;
-//Modelbinding vb
+    //Modelbinding vb
     //Controller advice vb
-    private final Logger logger= LoggerFactory.getLogger(ProductController.class);
+    private final Logger logger = LoggerFactory.getLogger(ProductController.class);
+    private final IIngredientManager ingredientManager;
+    private final IProductManager productManager;
+    private final RabbitSender rabbitSender;
+
     public ProductController(IIngredientManager ingredientManager, IProductManager productManager, RabbitSender rabbitSender) {
 
         this.ingredientManager = ingredientManager;
         this.productManager = productManager;
-        this.rabbitSender=rabbitSender;
+        this.rabbitSender = rabbitSender;
     }
 
     @GetMapping("/producten")
-    public String AlleProducten(Model model) {
+    public String AllProducts(Model model) {
 
-logger.info("test");
+        logger.info("test");
         List<Product> alleProducten = productManager.getAllProducts();
         System.out.println(alleProducten.size());
         model.addAttribute("Producten", alleProducten);
@@ -47,7 +50,7 @@ logger.info("test");
 
 
     @GetMapping("/producten/product/detail/{productId}")
-    public String ProductDetailPagina(Model model, @PathVariable Long productId) {
+    public String ProductDetailpage(Model model, @PathVariable Long productId) {
 
         Optional<Product> mogelijkProduct = productManager.getProductById(productId);
         if (mogelijkProduct.isPresent()) {
@@ -63,10 +66,9 @@ logger.info("test");
     }
 
 
-
     @GetMapping(value = {"/producten/product/bewerk", "/producten/product/bewerk/{productId}"})
-    public String ProductBewerkPagina(Model model, @PathVariable(required = false) Long productId) {
-System.out.println("gesaved");
+    public String ProductEditPage(Model model, @PathVariable(required = false) Long productId) {
+        System.out.println("gesaved");
 
         if (productId != null) {
             Optional<Product> mogelijkProduct = productManager.getProductById(productId);
@@ -92,8 +94,9 @@ System.out.println("gesaved");
         }
 
     }
-    @PostMapping(value = {"producten/product/bewerk", "/producten/product/bewerk/{productId}"},params = "finaliseer")
-    public ModelAndView FinaliseerProduct(Product binnekomendProduct) {
+
+    @PostMapping(value = {"producten/product/bewerk", "/producten/product/bewerk/{productId}"}, params = "finaliseer")
+    public ModelAndView FinaliseProduct(Product binnekomendProduct) {
         System.out.println("Finaliseer");
         Optional<Product> optioneelProduct = productManager.getProductById(binnekomendProduct.getProductId());
         if (optioneelProduct.isPresent()) {
@@ -114,7 +117,7 @@ System.out.println("gesaved");
 
 
     @GetMapping(value = {"producten/product/bewerk", "/producten/product/bewerk/{productId}"}, params = "deactiveer")
-    public ModelAndView DeactiveerProduct(@PathVariable Long productId) {
+    public ModelAndView DeactivateProduct(@PathVariable Long productId) {
         System.out.println("deactiveer");
         Optional<Product> optioneelProduct = productManager.getProductById(productId);
         if (optioneelProduct.isPresent()) {
@@ -134,7 +137,7 @@ System.out.println("gesaved");
     }
 
     @PostMapping(value = {"producten/product/bewerk", "/producten/product/bewerk/{productId}"})
-    public ModelAndView ProductOpslaan(Product product) {
+    public ModelAndView SaveProduct(Product product) {
 
         System.out.println(product.getName());
         productManager.saveProduct(product);
@@ -148,9 +151,9 @@ System.out.println("gesaved");
 
 
     @PostMapping(value = {"producten/product/bewerk", "/producten/product/bewerk/{productId}"}, params = "stap=toevoegen")
-    public ModelAndView VoegStapToe(Product product) {
+    public ModelAndView AddStep(Product product) {
 
-        product.getStappenplan().add("");
+        product.getSteps().add("");
         ModelAndView modelAndView = new ModelAndView("Producten/ProductBewerken");
         modelAndView.addObject("Product", product);
         return modelAndView;
@@ -158,17 +161,17 @@ System.out.println("gesaved");
 
 
     @GetMapping("/test")
-    public String test(){
-        HashMap<Ingredient,Double> composition=new HashMap<>();
-      Ingredient ingredientOne=  this.ingredientManager.saveIngredient(new Ingredient("testIgredient","testBeschrijving"));
-      Ingredient ingredientTwo= this.ingredientManager.saveIngredient(new Ingredient("testIgredient2","testBeschrijving"));
-        composition.put(ingredientOne,50d);
-        composition.put(ingredientTwo,50d);
-        Product product=this.productManager.saveProduct(new Product("testRecept", List.of("testBeschrijving"), composition)
+    public String test() {
+        HashMap<Ingredient, Double> composition = new HashMap<>();
+        Ingredient ingredientOne = this.ingredientManager.saveIngredient(new Ingredient("testIgredient", "testBeschrijving"));
+        Ingredient ingredientTwo = this.ingredientManager.saveIngredient(new Ingredient("testIgredient2", "testBeschrijving"));
+        composition.put(ingredientOne, 50d);
+        composition.put(ingredientTwo, 50d);
+        Product product = this.productManager.saveProduct(new Product("testRecept", List.of("testBeschrijving"), composition)
         );
 
-      this.rabbitSender.sendNewRecepy(product);
-return "errorPagina";
+        this.rabbitSender.sendNewRecepy(product);
+        return "errorPagina";
     }
 
 }

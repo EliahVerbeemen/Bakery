@@ -3,6 +3,7 @@ package kdg.be.Models;
 import jakarta.persistence.*;
 
 import java.util.Map;
+
 @Entity
 public class BatchProduct {
 
@@ -14,7 +15,7 @@ public class BatchProduct {
     private Product product;
 
     @ElementCollection
-    private Map<PreparationState,Integer> bereidingVanProducten=Map.of(PreparationState.NietGebakken,0, PreparationState.BakkenGestart,0, PreparationState.BakkenBeindigt,0);
+    private Map<PreparationState, Integer> productPreparation = Map.of(PreparationState.NietGebakken, 0, PreparationState.BakkenGestart, 0, PreparationState.BakkenBeindigt, 0);
 
     public BatchProduct(Product product) {
         this.product = product;
@@ -32,11 +33,11 @@ public class BatchProduct {
         this.product = product;
     }
 
-    public Map<PreparationState, Integer> getBereidingVanProducten() {
-        return bereidingVanProducten;
+    public Map<PreparationState, Integer> getProductPreparation() {
+        return productPreparation;
     }
 
-    public void setBereidingVanProducten(Map<PreparationState, Integer> bereidingVanProducten) {
-        this.bereidingVanProducten = bereidingVanProducten;
+    public void setProductPreparation(Map<PreparationState, Integer> bereidingVanProducten) {
+        this.productPreparation = bereidingVanProducten;
     }
 }

@@ -1,38 +1,53 @@
 package kdg.be.Models;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import jakarta.persistence.*;
-import kdg.be.Deserializers.IngredientDeserializer;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import static kdg.be.Models.ProductState.Nieuw;
 
 @Entity
 public class Product {
-
+    //Properties
     @Id
     @GeneratedValue
-    private Long ProductId;
-
+    private Long productId;
     private String name;
-
     @ElementCollection
-    private List<String> Stappenplan=new ArrayList<>();
-
+    private List<String> steps = new ArrayList<>();
     @ElementCollection
-private Map<Ingredient, Double>Samenstelling=new HashMap<>();
-   // @JsonDeserialize(keyUsing = IngredientDeserializer.class)
-    public Map<Ingredient, Double> getSamenstelling() {
-        return (Map<Ingredient, Double>) Samenstelling;
+    private Map<Ingredient, Double> composition = new HashMap<>();
+    private ProductState _ProductStatus = Nieuw;
+
+    //Constructors
+    public Product() {
     }
 
-    public void setSamenstelling(Map<Ingredient, Double> samenstelling) {
-        Samenstelling = samenstelling;
+    public Product(String name, List<String> steps) {
+        this.name = name;
+        this.steps = steps;
+    }
+
+    public Product(String name, List<String> steps, Map<Ingredient, Double> recepy) {
+        this.name = name;
+        this.steps = steps;
+        this.composition = recepy;
+    }
+
+    // @JsonDeserialize(keyUsing = IngredientDeserializer.class)
+    //GET & SET
+    public Map<Ingredient, Double> getComposition() {
+        return composition;
+    }
+
+    public void setComposition(Map<Ingredient, Double> composition) {
+        this.composition = composition;
     }
 
     public ProductState get_ProductStatus() {
@@ -43,28 +58,14 @@ private Map<Ingredient, Double>Samenstelling=new HashMap<>();
         this._ProductStatus = _ProductStatus;
     }
 
-    private ProductState _ProductStatus= Nieuw;
-
-
     public String getName() {
         return name;
     }
 
-    public Product(){
-
-    }
-
-
-    public Product(String name, List<String> stappenplan) {
+    public void setName(String name) {
         this.name = name;
-        Stappenplan = stappenplan;
+    }
 
-    }
-    public Product(String name, List<String> stappenplan, Map<Ingredient,Double> recepy) {
-        this.name = name;
-        Stappenplan = stappenplan;
-this.Samenstelling=recepy;
-    }
     public ProductState getProductStatus() {
         return _ProductStatus;
     }
@@ -73,35 +74,21 @@ this.Samenstelling=recepy;
         _ProductStatus = productStatus;
     }
 
-
-
-
     public Long getProductId() {
-        return ProductId;
+        return productId;
     }
-
 
     public void setProductId(Long productId) {
-        ProductId = productId;
+        this.productId = productId;
     }
 
-
-    public void setName(String name) {
-        this.name = name;
+    public List<String> getSteps() {
+        return steps;
     }
 
-    public List<String> getStappenplan() {
-        return Stappenplan;
+    public void setSteps(List<String> steps) {
+        this.steps = steps;
     }
-
-    public void setStappenplan(List<String> stappenplan) {
-        Stappenplan = stappenplan;
-    }
-
-
-
-
-
 
 
 }
