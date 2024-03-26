@@ -60,14 +60,14 @@ public class Batch {
     }
 
     public void setBatchDate(LocalDate batchdatum) {
-        batchdatum = batchdatum;
+        batchDate = batchdatum;
     }
 
     public List<BatchProduct> getProductsToPrepare() {
         return productsToPrepare;
     }
 
-    public void productsToprepare(ArrayList<BatchProduct> productsToPrepare) {
+    public void productsToPrepare(ArrayList<BatchProduct> productsToPrepare) {
         this.productsToPrepare = productsToPrepare;
     }
 }

@@ -14,10 +14,10 @@ import java.time.LocalDate;
 public class BatchController {
 
 
-    IBatchManager iBatchManager;
+    IBatchManager batchMgr;
 
-    public BatchController(IBatchManager iBatchManager) {
-        this.iBatchManager = iBatchManager;
+    public BatchController(IBatchManager batchMgr) {
+        this.batchMgr = batchMgr;
     }
 
 
@@ -27,17 +27,15 @@ public class BatchController {
         System.out.println(localdate);
         ModelAndView modelAndView = new ModelAndView("Batchen/Batch");
         if (localdate == null) localdate = LocalDate.now();
-        if (!iBatchManager.findBatchByDate(localdate).isPresent()) {
+        if (!batchMgr.findBatchByDate(localdate).isPresent()) {
             Batch batch = new Batch(localdate);
-            iBatchManager.save(batch);
+            batchMgr.save(batch);
             modelAndView.addObject("Batch", batch);
 
         } else {
-            Batch batch = iBatchManager.findBatchByDate(localdate).get();
+            Batch batch = batchMgr.findBatchByDate(localdate).get();
             modelAndView.addObject("Batch", batch);
-
         }
-
         return modelAndView;
     }
 

@@ -6,18 +6,18 @@ import kdg.be.Repositories.IBatchRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
+
 @Component
-public class BatchManager implements IBatchManager{
+public class BatchManager implements IBatchManager {
 
-  private IBatchRepository iBatchRepository;
+    private final IBatchRepository iBatchRepository;
 
-  public BatchManager(IBatchRepository iBatchRepository){
-      this.iBatchRepository=iBatchRepository;
+    public BatchManager(IBatchRepository iBatchRepository) {
+        this.iBatchRepository = iBatchRepository;
 
-  }
+    }
 
     @Override
     public Optional<Batch> findBatchByDate(LocalDate localDate) {
@@ -30,20 +30,42 @@ public class BatchManager implements IBatchManager{
     }
 
 
-    public Batch AddToBatch(OrdersFromClient ordersFromClient){
+    public Batch AddToBatch(OrdersFromClient ordersFromClient) {
 
-    // De batch wordt 's avonds afgesloten status gebakken
-      //Shrijf in JPArepositoy  een query of er een openstaande batch is...
-        if(true){
+        // De batch wordt 's avonds afgesloten status gebakken
+        //Shrijf in JPArepositoy  een query of er een openstaande batch is...
+        if (LocalTime.now().isBefore(LocalTime.of(22, 0))) {
+            Optional<Batch> batchOptional = findBatchByDate(LocalDate.now());
+            if (batchOptional.isPresent()) {
+                Batch dailyBatch = batchOptional.get();
+                ordersFromClient.getProducts().forEach((product, amount) -> {
+                    //dailyBatch.getProductsToPrepare().add()
+                });
+                return dailyBatch;
+            } else {
+                Batch batch = new Batch(LocalDate.now());
+                ordersFromClient.getProducts().forEach((product, amount) -> {
+                    //batch.getProductsToPrepare().add();
+                });
+                return batch;
+            }
 
-         }
-        else {
-            if (LocalTime.now().isBefore(LocalTime.of(22, 0))) {
-Batch batch=new Batch(/*LocalDateTime.now()*/);
-        ordersFromClient.getProducts().forEach((k,v)-> {
-
-//   batch.getTeBereidenProducten().add();
-
-        });}}
-        return null;
-    };}
+        } else {
+            Optional<Batch> batchOptional = findBatchByDate(LocalDate.now().plusDays(1));
+            if (batchOptional.isPresent()) {
+                Batch dailyBatch = batchOptional.get();
+                ordersFromClient.getProducts().forEach((product, amount) -> {
+                    //dailyBatch.getProductsToPrepare().add()
+                });
+                return dailyBatch;
+            } else {
+                Batch batch = new Batch(LocalDate.now().plusDays(1));
+                ordersFromClient.getProducts().forEach((product, amount) -> {
+                    //batch.getProductsToPrepare().add();
+                });
+                return batch;
+            }
+        }
+    // TODO: Optimize method to avoid duplicate code?
+    }
+}

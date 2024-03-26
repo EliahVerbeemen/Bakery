@@ -18,7 +18,5 @@ public class BatchProductManager implements IBatchproductManager {
     public BatchProduct save(BatchProduct batchProduct) {
 
       return  this.IBatchproductRepository.save(batchProduct);
-
-
     }
 }
