@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class OrdersFromClient {
+public class OrdersFromClientDTO {
 
-    public OrdersFromClient(Map<String, Integer> products) {
+    public OrdersFromClientDTO(Map<String, Integer> products) {
         this.products = products;
     }
 
-    public OrdersFromClient(){
+    public OrdersFromClientDTO(){
 
     }
 

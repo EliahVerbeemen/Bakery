@@ -170,7 +170,7 @@ public class ProductController {
         Product product = this.productManager.saveProduct(new Product("testRecept", List.of("testBeschrijving"), composition)
         );
 
-        this.rabbitSender.sendNewRecepy(product);
+        this.rabbitSender.sendNewRecipe(product);
         return "errorPagina";
     }
 

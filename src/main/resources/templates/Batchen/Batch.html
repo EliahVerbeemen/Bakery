@@ -6,17 +6,25 @@
 </head>
 <body>
 <form>
-<input name="localdate" type="date"  />
+    <input name="localdate" type="date"/>
     <button type="submit">batch opzoeken</button>
 </form>
 
 <table th:each="prod:${Batch.getTeBereidenProducten()}">
-   <thead>
-   <tr><th>Product</th></tr>
+    <thead>
+    <tr>
+        <th>Product</th>
+    </tr>
     </thead>
     <tbody>
-    <tr><td th:text="${prod.product.naam}"></td><td><ol><li th:each="stap:${prod.getProduct().samenstelling}"></li></ol> </td>
-        </tr>
+    <tr>
+        <td th:text="${prod.product.naam}"></td>
+        <td>
+            <ol>
+                <li th:each="stap:${prod.getProduct().samenstelling}"></li>
+            </ol>
+        </td>
+    </tr>
 
     </tbody>
 
@@ -24,7 +32,6 @@
 </table>
 
 </body>
-
 
 
 </html>

@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface IBatchRepository extends JpaRepository<Batch,Long> {
 
-    public Optional<Batch> findBatchByBatchdatum(LocalDate localDate);
+    public Optional<Batch> findBatchBybatchDate(LocalDate localDate);
 
 
 

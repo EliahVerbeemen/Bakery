@@ -1,6 +1,6 @@
 package kdg.be.Managers;
 
-import kdg.be.DTO.OrdersFromClient;
+import kdg.be.DTO.OrdersFromClientDTO;
 import kdg.be.Models.Batch;
 import kdg.be.Repositories.IBatchRepository;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ public class BatchManager implements IBatchManager {
 
     @Override
     public Optional<Batch> findBatchByDate(LocalDate localDate) {
-        return iBatchRepository.findBatchByBatchdatum(localDate);
+        return iBatchRepository.findBatchBybatchDate(localDate);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class BatchManager implements IBatchManager {
     }
 
 
-    public Batch AddToBatch(OrdersFromClient ordersFromClient) {
+    public Batch AddToBatch(OrdersFromClientDTO ordersFromClientDTO) {
 
         // De batch wordt 's avonds afgesloten status gebakken
         //Shrijf in JPArepositoy  een query of er een openstaande batch is...
@@ -38,13 +38,13 @@ public class BatchManager implements IBatchManager {
             Optional<Batch> batchOptional = findBatchByDate(LocalDate.now());
             if (batchOptional.isPresent()) {
                 Batch dailyBatch = batchOptional.get();
-                ordersFromClient.getProducts().forEach((product, amount) -> {
+                ordersFromClientDTO.getProducts().forEach((product, amount) -> {
                     //dailyBatch.getProductsToPrepare().add()
                 });
                 return dailyBatch;
             } else {
                 Batch batch = new Batch(LocalDate.now());
-                ordersFromClient.getProducts().forEach((product, amount) -> {
+                ordersFromClientDTO.getProducts().forEach((product, amount) -> {
                     //batch.getProductsToPrepare().add();
                 });
                 return batch;
@@ -54,13 +54,13 @@ public class BatchManager implements IBatchManager {
             Optional<Batch> batchOptional = findBatchByDate(LocalDate.now().plusDays(1));
             if (batchOptional.isPresent()) {
                 Batch dailyBatch = batchOptional.get();
-                ordersFromClient.getProducts().forEach((product, amount) -> {
+                ordersFromClientDTO.getProducts().forEach((product, amount) -> {
                     //dailyBatch.getProductsToPrepare().add()
                 });
                 return dailyBatch;
             } else {
                 Batch batch = new Batch(LocalDate.now().plusDays(1));
-                ordersFromClient.getProducts().forEach((product, amount) -> {
+                ordersFromClientDTO.getProducts().forEach((product, amount) -> {
                     //batch.getProductsToPrepare().add();
                 });
                 return batch;

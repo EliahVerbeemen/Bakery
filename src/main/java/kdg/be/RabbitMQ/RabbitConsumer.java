@@ -1,7 +1,7 @@
 package kdg.be.RabbitMQ;
 
 import kdg.be.DTO.IngredientDTO;
-import kdg.be.DTO.OrdersFromClient;
+import kdg.be.DTO.OrdersFromClientDTO;
 import kdg.be.Managers.ProductManager;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
@@ -25,9 +25,9 @@ System.out.println(message.getDepartmentOfStorage());
     }
 
     @RabbitListener(queues = {"receiveOrder"})
-    public void receiveOrder(OrdersFromClient order) {
-
-System.out.println(order);
+    public void receiveOrder(OrdersFromClientDTO order) {
+        System.out.println(order);
+    
 
     }
 
