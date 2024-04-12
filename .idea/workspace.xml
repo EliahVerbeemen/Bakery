@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d2cd2bc2-6f45-4785-a034-face83f49def" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/kdg/be/Managers/IIngredientHoeveelheidManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/kdg/be/Managers/IngredientHoeveelheidManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/kdg/be/Repositories/IIngredientHoeveelheidRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/Ingredienten/IngredientOverview.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/Producten/newProduct.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/sample.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/example/App.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/org/example/AppTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/EnkeleBemerkingen.MD" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/EnkeleBemerkingen.MD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kdg/be/Configuratie.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kdg/be/Configuratie.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kdg/be/Controllers/IngredientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kdg/be/Controllers/IngredientController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kdg/be/Controllers/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kdg/be/Controllers/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kdg/be/Managers/IIngredientManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kdg/be/Managers/IIngredientManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kdg/be/Managers/IProductManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kdg/be/Managers/IProductManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kdg/be/Managers/IngredientManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kdg/be/Managers/IngredientManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kdg/be/Managers/ProductManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kdg/be/Managers/ProductManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kdg/be/Models/Ingredient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kdg/be/Models/Ingredient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kdg/be/Models/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kdg/be/Models/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/Ingredienten/IngredientDetails.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/Ingredienten/IngredientenOverview.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/Ingredienten/IngredientenOverzicht.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/Producten/NieuwProduct.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/Producten/ProductBewerken.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/Producten/ProductDetailPagina.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/Producten/ProductenOverzicht.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/Producten/ProductenOverzicht.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/errorPagina.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/errorPagina.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="Class" />
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2er6FuH7KFNjYRKnhXDm7IsOzOt" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/erikv/IdeaProjects/PaasvaantieBakery/src/main/java/kdg/be&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;447bad6f3784382dccce8b64a2033523&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\erikv\IdeaProjects\PaasvaantieBakery\src\main\java\kdg\be" />
+      <recent name="C:\Users\erikv\IdeaProjects\PaasvaantieBakery\src\main\resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\erikv\AppData\Roaming\JetBrains\IntelliJIdea2023.1\scratches\Producten" />
+      <recent name="C:\Users\erikv\AppData\Roaming\JetBrains\IntelliJIdea2023.1\scratches" />
+      <recent name="C:\Users\erikv\IdeaProjects\PaasvaantieBakery\src\main\resources\templates" />
+      <recent name="C:\Users\erikv\IdeaProjects\PaasvaantieBakery\src\main\resources" />
+      <recent name="C:\Users\erikv\IdeaProjects\PaasvaantieBakery\src\main\java\kdg\be" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="PaasvaantieBakery" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="PaasvaantieBakery" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d2cd2bc2-6f45-4785-a034-face83f49def" name="Changes" comment="" />
+      <created>1712650249731</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1712650249731</updated>
+      <workItem from="1712650251370" duration="5779000" />
+      <workItem from="1712730826405" duration="774000" />
+      <workItem from="1712757571032" duration="2513000" />
+      <workItem from="1712760543723" duration="622000" />
+      <workItem from="1712817663830" duration="29921000" />
+      <workItem from="1712855231765" duration="123000" />
+      <workItem from="1712900292036" duration="26286000" />
+      <workItem from="1712930602044" duration="4504000" />
+      <workItem from="1712935201678" duration="89000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

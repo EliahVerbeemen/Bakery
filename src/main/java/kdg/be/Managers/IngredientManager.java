@@ -31,4 +31,24 @@ public class IngredientManager implements IIngredientManager {
     public void deleteIngredient(Long id){
         repo.deleteById(id);
     }
+
+@Override
+    public void updateIngredient(Long id, Ingredient nieuwIngredient){
+
+       Optional<Ingredient> oudOptioneelIngredient= repo.findById(id);
+        if(oudOptioneelIngredient.isPresent()){
+            System.out.println("aangekomen");
+            System.out.println(nieuwIngredient.getName());
+
+            Ingredient upTeDatenIngedient=oudOptioneelIngredient.get();
+            upTeDatenIngedient.setBeschrijving(nieuwIngredient.getBeschrijving());
+            upTeDatenIngedient.setName(nieuwIngredient.getName());
+            repo.save(upTeDatenIngedient);
+
+        }
+        else{
+            System.out.println("niet gevonden");
+        }
+
+    }
 }

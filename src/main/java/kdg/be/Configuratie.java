@@ -4,10 +4,7 @@ import kdg.be.Managers.IBatchManager;
 import kdg.be.Managers.IBatchproductManager;
 import kdg.be.Managers.IProductManager;
 import kdg.be.Managers.IngredientManager;
-import kdg.be.Models.Batch;
-import kdg.be.Models.BatchProduct;
-import kdg.be.Models.Ingredient;
-import kdg.be.Models.Product;
+import kdg.be.Models.*;
 import kdg.be.RabbitMQ.RabbitSender;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -51,17 +48,18 @@ public class Configuratie implements CommandLineRunner {
      /*   Ingredient nieuwIngredient = new Ingredient();
         nieuwIngredient.setNaam("testIngredient");
         nieuwIngredient.setBeschrijving("Ik ben en testIngredient");*/
-        Ingredient ingredient = new Ingredient("tet", "testB");
-        ingredientManager.saveIngredient(ingredient);
+        Ingredient ingredient = new Ingredient("test", "testB");
+        Ingredient ingredientTwee = new Ingredient("test2", "testBB");
+        ingredientManager.saveIngredient(ingredientTwee);
+       Ingredient ingredient1=ingredientManager.saveIngredient(ingredient);
         List<Ingredient> ingredients = ingredientManager.getAllIngredients();
-        HashMap<Ingredient, Double> ingredientenVooroorbeeld = new HashMap<>();
+      //nieuwProduct.getComposition().add(ingredient1);
+       //nieuwProduct.getAmounts().add(3.1);
 
-        ingredientenVooroorbeeld.put(ingredients.get(0), 50d);
-        nieuwProduct.setComposition(ingredientenVooroorbeeld);
         System.out.println(nieuwProduct.getComposition().size());
 //nieuwProduct.getSamenstelling().add(new Product_Ingredient(nieuwProduct,ing,50));
 
-        productManager.saveProduct(nieuwProduct);
+        productManager.saveOrUpdate(nieuwProduct);
         ArrayList<BatchProduct> batchproduct = new ArrayList<>();
         BatchProduct batchProduct = IbatchproductManager.save(new BatchProduct(nieuwProduct));
         batchproduct.add(batchProduct);

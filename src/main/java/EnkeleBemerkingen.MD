@@ -1,8 +1,4 @@
-De ingredientenpagina lijkt alle CRUD acties te ondersteunen
-Voor het bewerken gaan we naar een andere pagina.  Dit kan ongewenst zijn.
-
-1)  ControllrAdvice
-2) Validatie
-3) xml file
-4) Errors loggen
-![img.png](img.png)
+Dit zou al redelijk moeten zijn.
+alles saved naar behoren
+code is nog wel wat rommelig
+Paggina's aanmaken om bestellingen op een bepaalde dag te kunnen bereiden/klaar met bereiden

@@ -1,20 +1,29 @@
 package kdg.be.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 //@JsonDeserialize(using= IngredientDeserializer.class)
 public class Ingredient {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ingredientId;
 
-
+    @ManyToMany
+   // @JoinColumn(name = "item_id")
+    List<Product> product;
     private String name;
 
+    public List<Product> getProduct() {
+        return product;
+    }
+
+    public void setProduct(List<Product> product) {
+        this.product = product;
+    }
 
     private String description;
 
@@ -53,19 +62,20 @@ public class Ingredient {
         description = beschrijving;
     }
 
-    @Override
+/*     @Override
     public int hashCode() {
         return this.name.hashCode() + this.description.hashCode();
     }
 
-    @Override
+   @Override
     public boolean equals(Object obj) {
         if(obj ==null)return false;
         if(obj.getClass()!= Ingredient.class)return false;
         return this.ingredientId ==((Ingredient) obj).ingredientId; /*(((Ingredient) obj).getNaam().equals(this.getNaam())
         && (((Ingredient) obj).getBeschrijving().equals(this.getBeschrijving())));*/
-    }
+
 }
+
 
 
 

@@ -10,4 +10,6 @@ public interface IProductManager {
     public Product saveProduct(Product product);
 
     public List<Product> getAllProducts();
+
+    public Product saveOrUpdate(Product product);
 }

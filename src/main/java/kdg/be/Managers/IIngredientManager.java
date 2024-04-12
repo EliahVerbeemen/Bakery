@@ -11,4 +11,5 @@ public interface IIngredientManager {
     public Optional<Ingredient> getIngredientById(Long id);
     public Ingredient saveIngredient(Ingredient ingredient);
     public void deleteIngredient(Long id);
+    public void updateIngredient(Long id, Ingredient nieuwIngredient);
 }

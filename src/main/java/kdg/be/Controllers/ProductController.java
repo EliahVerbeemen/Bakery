@@ -1,7 +1,10 @@
 package kdg.be.Controllers;
 
+import kdg.be.Managers.IIngredientHoeveelheidManager;
 import kdg.be.Managers.IIngredientManager;
 import kdg.be.Managers.IProductManager;
+import kdg.be.Managers.IngredientHoeveelheidManager;
+import kdg.be.Models.IngHoeveelheidPaar;
 import kdg.be.Models.Ingredient;
 import kdg.be.Models.Product;
 import kdg.be.Models.ProductState;
@@ -13,10 +16,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -29,11 +34,13 @@ public class ProductController {
     private final IProductManager productManager;
     private final RabbitSender rabbitSender;
 
-    public ProductController(IIngredientManager ingredientManager, IProductManager productManager, RabbitSender rabbitSender) {
+    private  final IIngredientHoeveelheidManager ingredientHoeveelheidManager;
+    public ProductController(IIngredientManager ingredientManager, IProductManager productManager, IngredientHoeveelheidManager ingredientHoeveelheidManager, RabbitSender rabbitSender) {
 
         this.ingredientManager = ingredientManager;
         this.productManager = productManager;
         this.rabbitSender = rabbitSender;
+        this.ingredientHoeveelheidManager=ingredientHoeveelheidManager;
     }
 
     @GetMapping("/producten")
@@ -43,13 +50,142 @@ public class ProductController {
         List<Product> alleProducten = productManager.getAllProducts();
         System.out.println(alleProducten.size());
         model.addAttribute("Producten", alleProducten);
+     return "Producten/ProductenOverzicht";
+    }
 
+    @GetMapping(value={"/producten/create","/producten/create/{productId}"})
+    public String Newproduct(Model model, @PathVariable(required = false) Integer productId) {
+Product product=null;
+        List<Ingredient> alleIngredienten = ingredientManager.getAllIngredients();
 
-        return "Producten/ProductenOverzicht";
+        if(productId==null) {
+            product = new Product();
+            product.getSteps().add("begin");
+
+           /*    product.getComposition().add(alleIngredienten.get(0));
+            product.getAmounts().add(5.0);
+         product.getComposition().add(new Ingredient("", ""));
+            product.getAmounts().add(0.0);*/
+        }
+        else{
+
+            Optional<Product> optionalProduct=  productManager.getProductById(productId);
+            if(optionalProduct.isPresent()){
+
+                product=optionalProduct.get();
+            product.setProductId(Long.valueOf(productId));
+
+            }
+            else{
+                product=new Product("",new ArrayList<String>(),new ArrayList<>(),new ArrayList<>());
+            }
+
+        }
+    /*   product.getAmounts().add(1d);
+        product.getComposition().add(alleIngredienten.get(0));
+productManager.saveOrUpdate(product);*/
+        model.addAttribute("product", product);
+            model.addAttribute("alleIngredienten", alleIngredienten);
+
+        return "Producten/newProduct";
     }
 
 
-    @GetMapping("/producten/product/detail/{productId}")
+
+    @PostMapping(value="/producten/create")
+    public ModelAndView saveProduct(Model model, Product product) {
+        System.out.println(product.getName());
+      //  System.out.println(product.getComposition().keySet().toArray()[0].);
+
+        productManager.saveOrUpdate(product);
+      List<Ingredient>alleIngredienten=  ingredientManager.getAllIngredients();
+      model.addAttribute("alleIngredienten",alleIngredienten);
+System.out.println("saveProduct");
+        System.out.println(product.getComposition().size());
+
+        return new ModelAndView("redirect:/producten", (Map<String, ?>) model);
+    }
+    @PostMapping(value="/producten/create", params="stap")
+    public ModelAndView AddStep(Model model, Product product) {
+product.getSteps().add("voorbeeld");
+        model.addAttribute("product", product);
+
+System.out.println("stap");
+        return new ModelAndView("Producten/newProduct", (Map<String, ?>) model);
+    }
+    @PostMapping(value="/producten/create", params="addIng")
+    public ModelAndView AddIng(Model model, Product product) {
+
+        product.getAmounts().add((double) 0);
+
+        model.addAttribute("product", product);
+List<Ingredient> alleIngredienten=ingredientManager.getAllIngredients();
+
+        model.addAttribute("alleIngredienten",alleIngredienten);
+        product.getComposition().add(alleIngredienten.get(0));
+
+        return new ModelAndView("Producten/newProduct", (Map<String, ?>) model);
+    }//removeIng
+    @PostMapping(value="/producten/create", params ="removeIng" )
+    public ModelAndView RemoveIng(Model model, Product product, @RequestParam(name = "removeIng") int removeIng) {
+     System.out.println("removeIng is "+removeIng);
+        System.out.println(product.getComposition().size());
+        product.getAmounts().remove(removeIng);
+
+        product.getComposition().remove(removeIng);
+        System.out.println(product.getComposition().size());
+
+        model.addAttribute("product", product);
+        List<Ingredient> alleIngredienten=ingredientManager.getAllIngredients();
+        model.addAttribute("alleIngredienten",alleIngredienten);
+        return new ModelAndView("Producten/newProduct", (Map<String, ?>) model);
+    }
+@PostMapping(value = "/test")
+    public String Tijdelijk(IngHoeveelheidPaar ingHoeveelheidPaar, Product product){
+        System.out.println(ingHoeveelheidPaar.getAantal());
+System.out.println(ingHoeveelheidPaar.getIngredient().getName());
+  return "sample";
+
+}
+
+
+@GetMapping("/RT")
+public String RestRouteRabbit(){
+Product product=new Product();
+product.setName("test");
+product.getSteps().add("stap 1")      ;
+product.getSteps().add("stap 2")      ;
+
+
+    rabbitSender.sendNewRecipe(product);
+
+
+        return "sample";
+}
+
+
+@GetMapping("/producten/final/{productId}")
+public String MakeFinal(@PathVariable int productId){
+
+Optional<Product> optioneelProduct=productManager.getProductById(productId);
+
+if(optioneelProduct.isPresent()){
+    Product product =optioneelProduct.get();
+    product.set_ProductStatus(ProductState.Finaal);
+    System.out.println("bij het finaal maken");
+    System.out.println(product.getComposition().size());
+
+    productManager.saveOrUpdate(product);
+
+}
+
+    return "redirect:/producten";
+
+
+
+
+}
+  /*  @GetMapping("/producten/product/detail/{productId}")
     public String ProductDetailpage(Model model, @PathVariable Long productId) {
 
         Optional<Product> mogelijkProduct = productManager.getProductById(productId);
@@ -173,6 +309,6 @@ public class ProductController {
         this.rabbitSender.sendNewRecipe(product);
         return "errorPagina";
     }
-
+*/
 }
 

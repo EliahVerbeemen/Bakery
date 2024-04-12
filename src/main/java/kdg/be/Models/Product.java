@@ -1,9 +1,6 @@
 package kdg.be.Models;
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,8 +18,14 @@ public class Product {
     private String name;
     @ElementCollection
     private List<String> steps = new ArrayList<>();
+   @ManyToMany(cascade = CascadeType.ALL,fetch= FetchType.EAGER
+     ,mappedBy = "product")
+    private List<Ingredient> composition = new ArrayList<>();
+
     @ElementCollection
-    private Map<Ingredient, Double> composition = new HashMap<>();
+    private List<Double> amounts = new ArrayList<>();
+
+
     private ProductState _ProductStatus = Nieuw;
 
     //Constructors
@@ -34,21 +37,31 @@ public class Product {
         this.steps = steps;
     }
 
-    public Product(String name, List<String> steps, Map<Ingredient, Double> recepy) {
+    public Product(String name, List<String> steps, List<Ingredient> composition,List<Double>amounts) {
         this.name = name;
         this.steps = steps;
-        this.composition = recepy;
+        this.composition = composition;
+        this.amounts=amounts;
     }
 
-    // @JsonDeserialize(keyUsing = IngredientDeserializer.class)
-    //GET & SET
-    public Map<Ingredient, Double> getComposition() {
+    public List<Ingredient> getComposition() {
         return composition;
     }
 
-    public void setComposition(Map<Ingredient, Double> composition) {
+    public void setComposition(List<Ingredient> composition) {
         this.composition = composition;
     }
+
+    public List<Double> getAmounts() {
+        return amounts;
+    }
+
+    public void setAmounts(List<Double> amounts) {
+        this.amounts = amounts;
+    }
+// @JsonDeserialize(keyUsing = IngredientDeserializer.class)
+    //GET & SET
+
 
     public ProductState get_ProductStatus() {
         return _ProductStatus;

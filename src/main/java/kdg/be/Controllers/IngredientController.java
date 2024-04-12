@@ -1,10 +1,12 @@
 package kdg.be.Controllers;
 
 
+import kdg.be.Managers.IIngredientHoeveelheidManager;
 import kdg.be.Managers.IIngredientManager;
 import kdg.be.Managers.IngredientManager;
 import kdg.be.Models.Ingredient;
-import kdg.be.Repositories.IIngredientRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,62 +15,92 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Controller
 public class IngredientController {
 
     private IIngredientManager ingredientMgr;
 
+
+    Logger logger= LoggerFactory.getLogger(IngredientController.class);
+
     public IngredientController(IngredientManager ingredientManager) {
         ingredientMgr = ingredientManager;
 
+
     }
 
-    @GetMapping("/ingredienten")
-    public String AllIngredients(Model model) {
+
+    @GetMapping({"/ingredienten","/ingredienten/{ingredientId}"})
+    public String AllIngredients(Model model,@PathVariable(required = false) Integer ingredientId) {
 
         List<Ingredient> ing = ingredientMgr.getAllIngredients();
         model.addAttribute("Ingredienten", ing);
         Ingredient nieuwIngredient = new Ingredient();
         model.addAttribute("nieuwIngredient", nieuwIngredient);
 
-        return "Ingredienten/IngredientenOverview";
+        model.addAttribute("updateMe",ingredientId);
+    return "Ingredienten/IngredientOverview";
     }
 
-    @GetMapping(value = {"/ingredienten/ingredient/{ingredientId}"})
+  /*  @GetMapping(value = {"/ingredienten/ingredient/{ingredientId}"})
     public String IngredientDetails(@PathVariable Long ingredientId, Model model) {
         Optional<Ingredient> ingredient = ingredientMgr.getIngredientById(ingredientId);
         if (ingredient.isPresent()) {
             model.addAttribute("Ingredient", ingredient.get());
             model.addAttribute("IngredientId", ingredientId);
+
             return "Ingredienten/IngredientDetails";
         } else {
+            logger.warn("error");
             return "errorPagina";
         }
-    }
+    }*/
+
+
+
+
+
+
+
+
+
+
 
     @PostMapping(value = {"/ingredienten/ingredient/create"})
-    public ModelAndView NewIngredient(Ingredient ingredient, @PathVariable(required = false) Long ingredientId) {
+    public ModelAndView NewIngredient(Ingredient ingredient, @PathVariable(required = false) Long ingredientId,Model model) {
         System.out.println(ingredient.getBeschrijving());
         System.out.println(ingredient.getName());
 
         ingredientMgr.saveIngredient(ingredient);
-        ModelAndView modelAndView = new ModelAndView("Ingredienten/IngredientenOverview");
         List<Ingredient> ingredienten = ingredientMgr.getAllIngredients();
-        modelAndView.addObject("Ingredienten", ingredienten);
+        model.addAttribute("Ingredienten", ingredienten);
+        model.addAttribute("nieuwIngredient", new Ingredient());
+       /* ModelAndView modelAndView = new ModelAndView("Ingredienten/IngredientOverview");
 
-        return modelAndView;
+
+
+        modelAndView.addObject("Ingredienten", ingredienten);
+        modelAndView.addObject("nieuwIngredient", new Ingredient());*/
+
+        return new ModelAndView("redirect:/ingredienten", (Map<String, ?>) model) /*modelAndView*/;
     }
 
 
-    @PostMapping(value = {"/ingredienten/ingredient/update/{ingredientId}"})
-    public ModelAndView SaveIngredient(Ingredient ingredient, @PathVariable(required = false) Long ingredientId) {
+    @PostMapping("/ingredienten/update/{ingredientId}")
+    public ModelAndView SaveIngredient(Ingredient ingredient, @PathVariable(required = false) Long ingredientId, Model model) {
         System.out.println(ingredientId);
-        ModelAndView modelAndView = new ModelAndView();
+        ingredientMgr.updateIngredient(ingredient.getIngredientId(),ingredient);
+        List<Ingredient> ing = ingredientMgr.getAllIngredients();
+        model.addAttribute("Ingredienten", ing);
+        Ingredient nieuwIngredient = new Ingredient();
+        model.addAttribute("nieuwIngredient", nieuwIngredient);
+        return new ModelAndView("redirect:/ingredienten",(Map<String, ?>)model);
+      /*  ModelAndView modelAndView = new ModelAndView();
         Optional<Ingredient> ingredientOptional = ingredientMgr.getIngredientById(ingredientId);
         if (ingredientOptional.isPresent()) {
-            modelAndView.setViewName("IngredientenOverwiew");
+            modelAndView.setViewName("Ingredienten/IngredientOverview");
             Ingredient oudIngredient = ingredientOptional.get();
             oudIngredient.setName(ingredient.getName());
             oudIngredient.setBeschrijving(ingredient.getBeschrijving());
@@ -77,22 +109,31 @@ public class IngredientController {
             modelAndView.addObject("nieuwIngredient", new Ingredient());
             List<Ingredient> ing = ingredientMgr.getAllIngredients();
             modelAndView.addObject("Ingredienten", ing);
+
+
         } else {
             modelAndView.setViewName("errorPagina");
-        }
+        } */
 
-        return modelAndView;
+
 
     }
 
-    @GetMapping(value = {"/ingredienten/ingredient/verwijderen/{ingredientId}"})
-    public ModelAndView DeleteIngredient(@PathVariable(required = true) Long ingredientId) {
+    @GetMapping(value = {"/ingredienten/verwijderen/{ingredientId}"})
+    public ModelAndView DeleteIngredient(@PathVariable(required = true) Long ingredientId,Model model) {
         ingredientMgr.deleteIngredient(ingredientId);
         List<Ingredient> ingredienten = ingredientMgr.getAllIngredients();
-        ModelAndView modelAndView = new ModelAndView("IngredientenOverwiew");
-        modelAndView.addObject("Ingredienten", ingredienten);
-        modelAndView.addObject("nieuwIngredient", new Ingredient());
 
-        return modelAndView;
+        model.addAttribute("Ingredienten", ingredienten);
+        model.addAttribute("nieuwIngredient", new Ingredient());
+
+
+
+
+
+
+
+
+        return new ModelAndView("redirect:/ingredienten", (Map<String, ?>) model);
     }
 }
