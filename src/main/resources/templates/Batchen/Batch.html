@@ -2,36 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Batch</title>
 </head>
 <body>
-<form>
-    <input name="localdate" type="date"/>
-    <button type="submit">batch opzoeken</button>
-</form>
 
-<table th:each="prod:${Batch.getTeBereidenProducten()}">
-    <thead>
-    <tr>
-        <th>Product</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td th:text="${prod.product.naam}"></td>
-        <td>
-            <ol>
-                <li th:each="stap:${prod.getProduct().samenstelling}"></li>
-            </ol>
-        </td>
+<table>
+  <tr>  <th>Not yet prepared</th></tr>
+    <tr th:each="product, itemStat : ${notYetPrepared.productsinBatch}">
+<td th:text="${product.key.name}"></td>
+<td th:text="${product.value}"></td>
+
+
+
+
+
     </tr>
 
-    </tbody>
+    <tr><td><button th:attr="onclick=${' StartPreparing('+  notYetPrepared.getBatchId() +')'}">start preparation</button></td></tr>
+
+
+
+
+
+</table>
+<table th:each="batchInPreparation, itemStat : ${inPreparation}">
+    <tr>  <th>In preparation</th></tr>
+    <tr  th:each="product, itemStat : ${batchInPreparation.productsinBatch}">
+        <td th:text="${product.key.name}"></td>
+        <td th:text="${product.value}"></td>
+
+
+
+
+
+    </tr>
+<tr><td><button th:attr="onclick=${' BatchReady('+  batchInPreparation.getBatchId() +')'}">Products ready</button></td></tr>
+
+
+
 
 
 </table>
 
+
+
 </body>
+
+<script th:inline="javascript">
+
+    function StartPreparing(batchId){
+
+        console.log(batchId)
+        window.location.href="/batch/startpreparing/"+batchId;
+
+    }
+
+    function BatchReady(batchId){
+
+        console.log(batchId)
+        window.location.href="/batch/batchReady/"+batchId;
+
+    }
+</script>
 
 
 </html>

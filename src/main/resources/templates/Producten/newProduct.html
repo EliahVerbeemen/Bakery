@@ -22,7 +22,7 @@
 
     <h2>Samenstelling</h2>
     <table th:if="${product.composition.size()!=0}" >
-        <tr  >
+        <tr   >
 
             <td   th:each="ing, itemStat : ${product.getComposition()}">
                 <select th:field="${product.composition[__${itemStat.index}__]}">
