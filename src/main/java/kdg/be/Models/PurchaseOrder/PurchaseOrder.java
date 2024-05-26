@@ -2,29 +2,34 @@ package kdg.be.Models.PurchaseOrder;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
-import kdg.be.Services.PurchaseOrderDeserializer;
-import kdg.be.Services.PurchaseProductDeserializer;
-import org.hibernate.annotations.Fetch;
+import kdg.be.Deserializers.PurchaseOrderDeserializer;
+import kdg.be.Deserializers.PurchaseProductDeserializer;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 @Entity
 @JsonDeserialize(using = PurchaseOrderDeserializer.class)
-
 public class PurchaseOrder {
 
-    @OneToMany( fetch = FetchType.EAGER)
-    @JsonDeserialize(using =PurchaseProductDeserializer.class)
-    private List<PurchaseProduct> products=new ArrayList<>();
-
+    @OneToMany(fetch = FetchType.EAGER)
+    @JsonDeserialize(using = PurchaseProductDeserializer.class)
+    private List<PurchaseProduct> products = new ArrayList<>();
     private Long purchaseOrderNumber;
-
     private LocalDate orderdate;
     @Id
     @GeneratedValue
     private Long purchaseOrderId;
 
+    public PurchaseOrder() {
+    }
+
+    public PurchaseOrder(List<PurchaseProduct> products, Long purchaseOrderNumber, LocalDate orderdate) {
+        this.products = products;
+        this.purchaseOrderNumber = purchaseOrderNumber;
+        this.orderdate = orderdate;
+    }
 
     public List<PurchaseProduct> getProducts() {
         return products;
@@ -50,20 +55,11 @@ public class PurchaseOrder {
         this.orderdate = orderdate;
     }
 
-    public PurchaseOrder() {
-    }
-
-    public PurchaseOrder(List<PurchaseProduct> products, Long purchaseOrderNumber, LocalDate orderdate) {
-        this.products = products;
-        this.purchaseOrderNumber = purchaseOrderNumber;
-        this.orderdate = orderdate;
+    public Long getPurchaseOrderId() {
+        return purchaseOrderId;
     }
 
     public void setPurchaseOrderId(Long purchaseOrderId) {
         this.purchaseOrderId = purchaseOrderId;
-    }
-
-    public Long getPurchaseOrderId() {
-        return purchaseOrderId;
     }
 }

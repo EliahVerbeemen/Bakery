@@ -1,8 +1,6 @@
 package kdg.be.Models;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
-import kdg.be.Services.BatchSerializer;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -13,7 +11,28 @@ import java.util.Map;
 
 public class Batch {
 
-   private BatchState batchState=BatchState.NotYetPrepared;
+    private BatchState batchState = BatchState.NOT_YET_PREPARED;
+    @Id
+    @GeneratedValue
+    private Long batchId;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate batchDate;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Map<Product, Integer> productsinBatch = new HashMap<>();
+    public Batch() {
+
+    }
+
+
+    public Batch(LocalDate localDate) {
+
+        this.batchDate = localDate;
+    }
+
+    public Batch(BatchState batchState) {
+
+        this.batchState = batchState;
+    }
 
     public BatchState getBatchState() {
         return batchState;
@@ -23,25 +42,6 @@ public class Batch {
         this.batchState = batchState;
     }
 
-    @Id
-    @GeneratedValue
-    private Long batchId;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate batchDate;
-
-
-    public Batch() {
-
-    }
-
-    public Batch(LocalDate localDate) {
-
-        this.batchDate = localDate;
-    }
-    public Batch(BatchState batchState) {
-
-        this.batchState = batchState;
-    }
     public Map<Product, Integer> getProductsinBatch() {
         return productsinBatch;
     }
@@ -50,8 +50,6 @@ public class Batch {
         this.productsinBatch = productsinBatch;
     }
 
-    @ElementCollection(fetch = FetchType.EAGER)
-private Map<Product,Integer>productsinBatch=new HashMap<>();
     public Long getBatchId() {
         return batchId;
     }

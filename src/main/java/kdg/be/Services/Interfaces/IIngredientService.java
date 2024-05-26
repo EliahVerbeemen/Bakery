@@ -1,4 +1,4 @@
-package kdg.be.Services.Repositories;
+package kdg.be.Services.Interfaces;
 
 import kdg.be.Models.Ingredient;
 
@@ -6,10 +6,14 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface IIngredientManager {
-    public List<Ingredient> getAllIngredients();
-    public Optional<Ingredient> getIngredientById(Long id);
-    public Ingredient saveIngredient(Ingredient ingredient);
-    public void deleteIngredient(Long id);
-    public void updateIngredient(Long id, Ingredient nieuwIngredient);
+public interface IIngredientService {
+    List<Ingredient> getAllIngredients();
+
+    Optional<Ingredient> getIngredientById(Long id);
+
+    Ingredient saveIngredient(Ingredient ingredient);
+
+    void deleteIngredient(Long id);
+
+    void updateIngredient(Long id, Ingredient nieuwIngredient);
 }

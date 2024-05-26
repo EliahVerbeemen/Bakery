@@ -1,23 +1,16 @@
 package kdg.be.Models;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
-import kdg.be.Services.BatchSerializer;
-import org.springframework.messaging.support.ErrorMessage;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-import static kdg.be.Models.ProductState.Nieuw;
+import static kdg.be.Models.ProductState.NEW;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-/*@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "productId")*/
 public class Product implements Serializable {
     //Properties
     @Id
@@ -27,24 +20,15 @@ public class Product implements Serializable {
     private String name;
     @ElementCollection
     private List<String> steps = new ArrayList<>();
-   @ManyToMany(cascade = CascadeType.ALL,fetch= FetchType.EAGER
-     ,mappedBy = "product")
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER
+            , mappedBy = "product")
     private List<Ingredient> composition = new ArrayList<>();
 
     @ElementCollection
 
     private List<Double> amounts = new ArrayList<>();
     private String specialInstruction;
-
-    public String getSpecialInstruction() {
-        return specialInstruction;
-    }
-
-    public void setSpecialInstruction(String specialInstruction) {
-        this.specialInstruction = specialInstruction;
-    }
-
-    private ProductState _ProductStatus = Nieuw;
+    private ProductState _ProductStatus = NEW;
 
     //Constructors
     public Product() {
@@ -55,11 +39,19 @@ public class Product implements Serializable {
         this.steps = steps;
     }
 
-    public Product(String name, List<String> steps, List<Ingredient> composition,List<Double>amounts) {
+    public Product(String name, List<String> steps, List<Ingredient> composition, List<Double> amounts) {
         this.name = name;
         this.steps = steps;
         this.composition = composition;
-        this.amounts=amounts;
+        this.amounts = amounts;
+    }
+
+    public String getSpecialInstruction() {
+        return specialInstruction;
+    }
+
+    public void setSpecialInstruction(String specialInstruction) {
+        this.specialInstruction = specialInstruction;
     }
 
     public List<Ingredient> getComposition() {
@@ -77,7 +69,6 @@ public class Product implements Serializable {
     public void setAmounts(List<Double> amounts) {
         this.amounts = amounts;
     }
-
 
     public ProductState get_ProductStatus() {
         return _ProductStatus;

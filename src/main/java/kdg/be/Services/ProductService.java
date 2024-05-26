@@ -1,22 +1,24 @@
 package kdg.be.Services;
 
-import kdg.be.Services.Repositories.IIngredientManager;
-import kdg.be.Services.Repositories.IProductManager;
 import kdg.be.Models.Product;
 import kdg.be.Repositories.IProductRepository;
+import kdg.be.Services.Interfaces.IIngredientService;
+import kdg.be.Services.Interfaces.IProductService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Component
-public class ProductManager implements IProductManager {
+public class ProductService implements IProductService {
     private final IProductRepository productRepository;
-    private final IIngredientManager ingredientManager;
+    private final IIngredientService ingredientService;
 
-    public ProductManager(IProductRepository repository, IIngredientManager repository2) {
+    public ProductService(IProductRepository repository, IIngredientService repository2) {
         productRepository = repository;
-        this.ingredientManager =repository2;
+        this.ingredientService = repository2;
     }
 
     public List<Product> getAllProducts() {
@@ -28,7 +30,6 @@ public class ProductManager implements IProductManager {
     }
 
     public Product saveProduct(Product product) {
-
         return productRepository.save(product);
     }
 
@@ -42,24 +43,22 @@ public class ProductManager implements IProductManager {
             product1.setSteps(product.getSteps());
             product1.setComposition(product.getComposition());
             product1.setAmounts(product.getAmounts());
-            product1.getComposition().forEach(e->e.getProduct().remove(product1));
+            product1.getComposition().forEach(e -> e.getProduct().remove(product1));
             product1.setComposition(new ArrayList<>());
             product1.setComposition(product.getComposition());
-            product.getComposition().forEach(e->{e.getProduct().add(product1);
-                ingredientManager.saveIngredient(e) ;
+            product.getComposition().forEach(e -> {
+                e.getProduct().add(product1);
+                ingredientService.saveIngredient(e);
             });
 
             return productRepository.save(product1);
         } else {
-       Product p1=     productRepository.save(product);
-       product.getComposition().forEach(e->{
-        e.getProduct().add(product);
-        ingredientManager.saveIngredient(e);
-
-});
-
-         return   p1;
-
+            Product p1 = productRepository.save(product);
+            product.getComposition().forEach(e -> {
+                e.getProduct().add(product);
+                ingredientService.saveIngredient(e);
+            });
+            return p1;
         }
     }
 }

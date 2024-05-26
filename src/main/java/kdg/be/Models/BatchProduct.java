@@ -3,7 +3,7 @@ package kdg.be.Models;
 import jakarta.persistence.*;
 
 import java.util.Map;
-//Wordt niet in gebruik genomen
+
 @Entity
 public class BatchProduct {
 
@@ -15,9 +15,7 @@ public class BatchProduct {
     private Product product;
 
     @ElementCollection
-    private Map<PreparationState, Integer> productPreparation = Map.of(PreparationState.NietGebakken, 0, PreparationState.BakkenGestart, 0, PreparationState.BakkenBeindigt, 0);
-
-
+    private Map<PreparationState, Integer> productPreparation = Map.of(PreparationState.NOT_BAKED, 0, PreparationState.BAKING_STARTED, 0, PreparationState.BAKED, 0);
 
 
     public BatchProduct(Product product) {

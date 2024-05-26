@@ -1,4 +1,4 @@
-package kdg.be.Services;
+package kdg.be.Deserializers;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -14,63 +14,52 @@ import kdg.be.Models.PurchaseOrder.PurchaseProduct;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 public class PurchaseOrderDeserializer extends JsonDeserializer<PurchaseOrder> {
     @Override
-    public PurchaseOrder deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JacksonException {
+    public PurchaseOrder deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
-
-     String items=   node.get("items").asText();
+        String items = node.get("items").asText();
         TypeReference<HashMap<String, Integer>> typeRef
-                = new TypeReference<>() {};
+                = new TypeReference<>() {
+        };
 
+        System.out.println(items);
+        ObjectMapper mapper = new ObjectMapper();
 
-     System.out.println(items);
-        ObjectMapper mapper=new ObjectMapper();
+        PurchaseOrder purchaseOrder = new PurchaseOrder();
+        List<PurchaseProduct> purchaseProducts = new ArrayList<>();
 
-     PurchaseOrder purchaseOrder=new PurchaseOrder();
-        List<PurchaseProduct>purchaseProducts=new ArrayList<>();
+        HashMap<String, Integer> p = mapper.readValue(items, typeRef);
 
-        HashMap<String,Integer> p=    mapper.readValue(items,typeRef);
-
-
-        p.forEach((k,v)->{
-
+        p.forEach((k, v) -> {
             try {
-         PurchaseProduct purchaseProduct=       mapper.readValue(k,PurchaseProduct.class);
-         purchaseProduct.setQuantity(v);
-         purchaseProducts.add(purchaseProduct);
+                PurchaseProduct purchaseProduct = mapper.readValue(k, PurchaseProduct.class);
+                purchaseProduct.setQuantity(v);
+                purchaseProducts.add(purchaseProduct);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
-
-
         });
 
-
-
-
-
         try {
-            String orderDate=  node.get("orderDate").asText();
-            SimpleDateFormat simpleDateFormat=new SimpleDateFormat("EEE MMM d H:mm:ss zzz yyyy", Locale.ENGLISH);
-            LocalDate localDate= LocalDate.parse(simpleDateFormat.format(orderDate));
+            String orderDate = node.get("orderDate").asText();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM d H:mm:ss zzz yyyy", Locale.ENGLISH);
+            LocalDate localDate = LocalDate.parse(simpleDateFormat.format(orderDate));
             purchaseOrder.setOrderdate(localDate);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
 
             System.out.println("niet dus");
         }
 
-
-        Long purchaseOrdeNumber= node.get("purchaseOrderNumber").asLong();
+        Long purchaseOrdeNumber = node.get("purchaseOrderNumber").asLong();
         purchaseOrder.setPurchaseOrderNumber(purchaseOrdeNumber);
-purchaseOrder.setProducts(purchaseProducts);
-                return purchaseOrder;
-
-
-
-
+        purchaseOrder.setProducts(purchaseProducts);
+        return purchaseOrder;
     }
 }

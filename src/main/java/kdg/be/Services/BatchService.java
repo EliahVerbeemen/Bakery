@@ -1,10 +1,10 @@
 package kdg.be.Services;
 
-import kdg.be.Services.Repositories.IBatchManager;
 import kdg.be.Models.Batch;
 import kdg.be.Models.BatchState;
 import kdg.be.Models.Product;
 import kdg.be.Repositories.IBatchRepository;
+import kdg.be.Services.Interfaces.IBatchService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,13 +14,12 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-public class BatchManager implements IBatchManager {
+public class BatchService implements IBatchService {
 
     private final IBatchRepository iBatchRepository;
 
-    public BatchManager(IBatchRepository iBatchRepository) {
+    public BatchService(IBatchRepository iBatchRepository) {
         this.iBatchRepository = iBatchRepository;
-
     }
 
     @Override
@@ -39,53 +38,27 @@ public class BatchManager implements IBatchManager {
         return iBatchRepository.findBatchByBatchState(batchState);
     }
 
-@Transactional
+    @Transactional
     public Batch saveOrUpdate(Batch batch) {
         if (iBatchRepository.existsById(batch.getBatchId())) {
-
             Batch bestaandebatch = iBatchRepository.findById(batch.getBatchId()).get();
-            for(Map.Entry<Product, Integer> entry: batch.getProductsinBatch().entrySet()){
-                if(bestaandebatch.getProductsinBatch().containsKey(entry.getKey())){
-
-                    bestaandebatch.getProductsinBatch().replace(entry.getKey(),batch.getProductsinBatch().get(entry.getKey()));
-
-
-
-
-
+            for (Map.Entry<Product, Integer> entry : batch.getProductsinBatch().entrySet()) {
+                if (bestaandebatch.getProductsinBatch().containsKey(entry.getKey())) {
+                    bestaandebatch.getProductsinBatch().replace(entry.getKey(), batch.getProductsinBatch().get(entry.getKey()));
+                } else {
+                    bestaandebatch.getProductsinBatch().put(entry.getKey(), entry.getValue());
                 }
-                else{
-
-                    bestaandebatch.getProductsinBatch().put(entry.getKey(),entry.getValue());
-                }
-
-
-
-
             }
             bestaandebatch.setProductsinBatch(batch.getProductsinBatch());
             bestaandebatch.setBatchState(batch.getBatchState());
-
-           return iBatchRepository.save(bestaandebatch);
-
+            return iBatchRepository.save(bestaandebatch);
         } else {
-
-
             return iBatchRepository.save(batch);
-
-
         }
-
-
     }
+
     @Override
-    public Optional<Batch> findBatchById(Long batchId){
-
+    public Optional<Batch> findBatchById(Long batchId) {
         return iBatchRepository.findBatchByBatchId(batchId);
-
-
-
     }
-
-
 }

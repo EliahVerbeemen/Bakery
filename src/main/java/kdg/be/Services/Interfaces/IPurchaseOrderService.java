@@ -1,11 +1,9 @@
-package kdg.be.Services.Repositories;
+package kdg.be.Services.Interfaces;
 
 import kdg.be.Models.PurchaseOrder.PurchaseOrder;
 
 
-public interface IPurchaseOrder {
-
-
- PurchaseOrder   saveOrUpdate(PurchaseOrder purchaseOrder);
+public interface IPurchaseOrderService {
+    PurchaseOrder saveOrUpdate(PurchaseOrder purchaseOrder);
 
 }

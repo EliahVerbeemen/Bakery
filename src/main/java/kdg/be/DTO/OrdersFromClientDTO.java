@@ -2,8 +2,9 @@ package kdg.be.DTO;
 
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import jakarta.persistence.*;
-import kdg.be.Services.OrderFromClientDeserializer;
+import jakarta.persistence.ElementCollection;
+import kdg.be.Deserializers.OrderFromClientDeserializer;
+import kdg.be.Enums.OrderState;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -13,34 +14,31 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-@JsonDeserialize(using = OrderFromClientDeserializer.class )
+@JsonDeserialize(using = OrderFromClientDeserializer.class)
 public class OrdersFromClientDTO {
-
-
-
-
-
-
-
-    private OrderStatus orderStatus;
-
-
+    private OrderState orderState;
     private Map<Long, Integer> products = new HashMap<>();
-
     @ElementCollection
     private List<String> Remarks = new ArrayList<>();
-
-
-
-
-
-
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
+    // Constructors
+    public OrdersFromClientDTO(LocalDate orderDate, Map<Long, Integer> producten, OrderState orderState) {
+        products = producten;
+        this.orderState = orderState;
     }
 
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
+    public OrdersFromClientDTO(Map<Long, Integer> producten) {
+        products = producten;
+    }
+
+    public OrdersFromClientDTO() {
+    }
+
+    public OrderState getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(OrderState orderState) {
+        this.orderState = orderState;
     }
 
     public Map<Long, Integer> getProducts() {
@@ -59,28 +57,4 @@ public class OrdersFromClientDTO {
         Remarks = remarks;
     }
 
-    // Constructors
-    public OrdersFromClientDTO(LocalDate orderDate, Map<Long, Integer> producten, OrderStatus orderStatus) {
-
-        products = producten;
-        this.orderStatus = orderStatus;
-    }
-
-    public OrdersFromClientDTO(Map<Long, Integer> producten) {
-
-
-        products = producten;
-
-    }
-
-    public OrdersFromClientDTO() {
-
-    }
-
-
-    public enum OrderStatus {
-        Niet_bevestigd,
-        Bevestigd,
-        Geannulleerd
-    }
 }

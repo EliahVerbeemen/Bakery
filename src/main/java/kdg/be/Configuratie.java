@@ -1,11 +1,14 @@
 package kdg.be;
 
-import kdg.be.Managers.Repositories.IBatchManager;
-import kdg.be.Managers.Repositories.IBatchproductManager;
-import kdg.be.Managers.Repositories.IProductManager;
-import kdg.be.Managers.IngredientManager;
-import kdg.be.Models.*;
+import kdg.be.Models.Batch;
+import kdg.be.Models.BatchState;
+import kdg.be.Models.Ingredient;
+import kdg.be.Models.Product;
 import kdg.be.RabbitMQ.RabbitSender;
+import kdg.be.Services.IngredientService;
+import kdg.be.Services.Interfaces.IBatchProductService;
+import kdg.be.Services.Interfaces.IBatchService;
+import kdg.be.Services.Interfaces.IProductService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -18,20 +21,20 @@ import java.util.List;
 @Component
 public class Configuratie implements CommandLineRunner {
 
-    private IngredientManager ingredientManager;
-    private IProductManager productManager;
-    private IBatchManager iBatchManager;
+    private final IngredientService ingredientManager;
+    private final IProductService productManager;
+    private final IBatchService iBatchService;
 
-    private IBatchproductManager IbatchproductManager;
-    private RabbitSender rabbitSender;
+    private final IBatchProductService ibatchproductManager;
+    private final RabbitSender rabbitSender;
 
-    public Configuratie(IngredientManager ingredientRepository, IProductManager iProductManager,
-                        IBatchManager iBatchManager, IBatchproductManager IBatchproductManager
+    public Configuratie(IngredientService ingredientRepository, IProductService iProductService,
+                        IBatchService iBatchService, IBatchProductService IBatchProductService
             , RabbitSender rabbitSender) {
         this.ingredientManager = ingredientRepository;
-        this.productManager = iProductManager;
-        this.iBatchManager = iBatchManager;
-        this.IbatchproductManager = IBatchproductManager;
+        this.productManager = iProductService;
+        this.iBatchService = iBatchService;
+        this.ibatchproductManager = IBatchProductService;
         this.rabbitSender = rabbitSender;
 
     }
@@ -44,32 +47,26 @@ public class Configuratie implements CommandLineRunner {
         ArrayList<String> stappenplan = new ArrayList<>();
         stappenplan.add("Voeg dan nu de bloem toe");
         nieuwProduct.setSteps(stappenplan);
-     /*   Ingredient nieuwIngredient = new Ingredient();
-        nieuwIngredient.setNaam("testIngredient");
-        nieuwIngredient.setBeschrijving("Ik ben en testIngredient");*/
         Ingredient ingredient = new Ingredient("test", "testB");
         Ingredient ingredientTwee = new Ingredient("test2", "testBB");
-      Ingredient ik=  ingredientManager.saveIngredient(ingredientTwee);
-       Ingredient ingredient1=ingredientManager.saveIngredient(ingredient);
+        Ingredient ik = ingredientManager.saveIngredient(ingredientTwee);
+        Ingredient ingredient1 = ingredientManager.saveIngredient(ingredient);
         List<Ingredient> ingredients = ingredientManager.getAllIngredients();
-
 
 
         System.out.println(nieuwProduct.getComposition().size());
 
-Batch batch=new Batch();
-batch.setBatchState(BatchState.NotYetPrepared);
-batch.setBatchId(1L);
-batch.setBatchDate(LocalDate.now());
+        Batch batch = new Batch();
+        batch.setBatchState(BatchState.NOT_YET_PREPARED);
+        batch.setBatchId(1L);
+        batch.setBatchDate(LocalDate.now());
 
-productManager.saveOrUpdate(nieuwProduct);
-nieuwProduct.getComposition().add(ingredientTwee);
-batch.getProductsinBatch().put(nieuwProduct,3);
+        productManager.saveOrUpdate(nieuwProduct);
+        nieuwProduct.getComposition().add(ingredientTwee);
+        batch.getProductsinBatch().put(nieuwProduct, 3);
 
-iBatchManager.saveOrUpdate(batch);
+        iBatchService.saveOrUpdate(batch);
 
     }
 }
-
-;
 

@@ -10,30 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-//@JsonDeserialize(using= IngredientDeserializer.class)
 public class Ingredient implements Serializable {
 
+    @ManyToMany
+    @JsonIgnore
+    List<Product> product = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ingredientId;
-
-    @ManyToMany
-
-   // @JoinColumn(name = "item_id")
-            @JsonIgnore
-    List<Product> product=new ArrayList<>();
     private String name;
-
-    public List<Product> getProduct() {
-        return product;
-    }
-
-    public void setProduct(List<Product> product) {
-        this.product = product;
-    }
-
     private String description;
-
 
     public Ingredient(String name, String description) {
         this.name = name;
@@ -44,6 +30,13 @@ public class Ingredient implements Serializable {
     public Ingredient() {
     }
 
+    public List<Product> getProduct() {
+        return product;
+    }
+
+    public void setProduct(List<Product> product) {
+        this.product = product;
+    }
 
     public Long getIngredientId() {
         return ingredientId;
@@ -69,23 +62,10 @@ public class Ingredient implements Serializable {
         description = beschrijving;
     }
 
-/*     @Override
-    public int hashCode() {
-        return this.name.hashCode() + this.description.hashCode();
-    }
-
-   @Override
-    public boolean equals(Object obj) {
-        if(obj ==null)return false;
-        if(obj.getClass()!= Ingredient.class)return false;
-        return this.ingredientId ==((Ingredient) obj).ingredientId; /*(((Ingredient) obj).getNaam().equals(this.getNaam())
-        && (((Ingredient) obj).getBeschrijving().equals(this.getBeschrijving())));*/
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Ingredient that)) return false;
-
         return ingredientId.equals(that.ingredientId);
     }
 
@@ -95,9 +75,8 @@ public class Ingredient implements Serializable {
     }
 
     @Override
-    public String toString(){
-
-        ObjectMapper objectMapper=new ObjectMapper();
+    public String toString() {
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {

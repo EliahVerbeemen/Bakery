@@ -1,9 +1,7 @@
-package kdg.be.Services.Repositories;
+package kdg.be.Services.Interfaces;
 
 import kdg.be.Models.BatchProduct;
 
-public interface IBatchproductManager {
-
+public interface IBatchProductService {
     public  BatchProduct save(BatchProduct batchProduct);
-
 }

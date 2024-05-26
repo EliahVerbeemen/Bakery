@@ -8,14 +8,15 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
 @Repository
-public interface IBatchRepository extends JpaRepository<Batch,Long> {
+public interface IBatchRepository extends JpaRepository<Batch, Long> {
 
-    public Optional<Batch> findBatchBybatchDate(LocalDate localDate);
+    Optional<Batch> findBatchBybatchDate(LocalDate localDate);
 
-    public List<Batch> findBatchByBatchState(BatchState batchState);
+    List<Batch> findBatchByBatchState(BatchState batchState);
 
-    public Optional<Batch> findBatchByBatchId(Long batchId);
+    Optional<Batch> findBatchByBatchId(Long batchId);
 
 
 }

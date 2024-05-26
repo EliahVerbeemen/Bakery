@@ -2,16 +2,16 @@ package kdg.be.DTO;
 
 public class IngredientDTO {
     private String departmentOfStorage;
-
     private long shelfLife;
-
-    public String getDepartmentOfStorage() {
-        return departmentOfStorage;
-    }
+    private Long ingredientId;
 
     public IngredientDTO(String departmentOfStorage, long shelfLife) {
         this.departmentOfStorage = departmentOfStorage;
         this.shelfLife = shelfLife;
+    }
+
+    public String getDepartmentOfStorage() {
+        return departmentOfStorage;
     }
 
     public void setDepartmentOfStorage(String departmentOfStorage) {
@@ -33,6 +33,4 @@ public class IngredientDTO {
     public void setIngredientId(Long ingredientId) {
         this.ingredientId = ingredientId;
     }
-
-    private Long ingredientId;
 }

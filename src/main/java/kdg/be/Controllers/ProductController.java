@@ -3,12 +3,12 @@ package kdg.be.Controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import kdg.be.Managers.Repositories.IIngredientManager;
-import kdg.be.Managers.Repositories.IProductManager;
 import kdg.be.Models.Ingredient;
 import kdg.be.Models.Product;
 import kdg.be.Models.ProductState;
 import kdg.be.RabbitMQ.RabbitSender;
+import kdg.be.Services.Interfaces.IIngredientService;
+import kdg.be.Services.Interfaces.IProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,246 +32,176 @@ import java.util.Optional;
 
 @Controller
 public class ProductController {
-    //Modelbinding vb
-    //Controller advice vb
     private final Logger logger = LoggerFactory.getLogger(ProductController.class);
-    private final IIngredientManager ingredientManager;
-    private final IProductManager productManager;
+    private final IIngredientService ingredientService;
+    private final IProductService productService;
     private final RabbitSender rabbitSender;
-
-    ;
-    public ProductController(IIngredientManager ingredientManager, IProductManager productManager,  RabbitSender rabbitSender) {
-
-        this.ingredientManager = ingredientManager;
-        this.productManager = productManager;
-        this.rabbitSender = rabbitSender;
-
-    }
-
 
     @Autowired
     @Qualifier("ProductValidator")
     private Validator validator;
+    private String returnUrl;
+
+    public ProductController(IIngredientService ingredientService, IProductService productService, RabbitSender rabbitSender) {
+        this.ingredientService = ingredientService;
+        this.productService = productService;
+        this.rabbitSender = rabbitSender;
+    }
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(validator);
     }
 
-    private String returnUrl;
-
     @GetMapping("/")
-    public String ToonHomePage(){
-
-
-
+    public String showHomePage() {
         return "redirect:/products";
     }
 
 
-    @GetMapping(value={"/products"})
-    public ModelAndView AllProducts(Model model,  @ModelAttribute("error") String flashAttribute) {
-
-        List<Product> alleProducten = productManager.getAllProducts();
-        model.addAttribute("Producten", alleProducten);
-model.addAttribute("error",flashAttribute);
-     return new ModelAndView("Products/ProductenOverzicht");
+    @GetMapping(value = {"/products"})
+    public ModelAndView allProducts(Model model, @ModelAttribute("error") String flashAttribute) {
+        List<Product> allProducts = productService.getAllProducts();
+        model.addAttribute("Producten", allProducts);
+        model.addAttribute("error", flashAttribute);
+        return new ModelAndView("Products/ProductenOverzicht");
     }
 
-    @GetMapping(value={"/products/create","/products/create/{productId}"})
-    public String Newproduct(Model model, @PathVariable(required = false) Integer productId, HttpServletRequest request ) {
-  String ref=  request.getHeader("referer");
-System.out.println(ref);
-if(ref!=null&&ref.contains("batch")||ref!=null&&ref.contains("product")){
-
-    this.returnUrl=ref;
-
-}
-
-        Product product=null;
-
-        List<Ingredient> alleIngredienten = ingredientManager.getAllIngredients();
-
-        if(productId==null) {
+    @GetMapping(value = {"/products/create", "/products/create/{productId}"})
+    public String newProduct(Model model, @PathVariable(required = false) Integer productId, HttpServletRequest request) {
+        String ref = request.getHeader("referer");
+        System.out.println(ref);
+        if (ref != null && ref.contains("batch") || ref != null && ref.contains("product")) {
+            this.returnUrl = ref;
+        }
+        Product product = null;
+        List<Ingredient> allIngredients = ingredientService.getAllIngredients();
+        if (productId == null) {
             product = new Product();
             product.getSteps().add("");
-
-        }
-        else{
-
-            Optional<Product> optionalProduct=  productManager.getProductById(productId);
-            if(optionalProduct.isPresent()){
-
-                product=optionalProduct.get();
-            product.setProductId(Long.valueOf(productId));
-
+        } else {
+            Optional<Product> optionalProduct = productService.getProductById(productId);
+            if (optionalProduct.isPresent()) {
+                product = optionalProduct.get();
+                product.setProductId(Long.valueOf(productId));
+            } else {
+                product = new Product("", new ArrayList<String>(), new ArrayList<>(), new ArrayList<>());
             }
-            else{
-                product=new Product("",new ArrayList<String>(),new ArrayList<>(),new ArrayList<>());
-            }
-
         }
-
         model.addAttribute("product", product);
-
-
-        model.addAttribute("alleIngredienten", alleIngredienten);
-
+        model.addAttribute("alleIngredienten", allIngredients);
         return "Products/newProduct";
     }
 
 
-
-    @PostMapping(value="/products/create")
+    @PostMapping(value = "/products/create")
     public ModelAndView saveProduct(Model model, @Valid Product product, BindingResult bindingResult) {
 
-        List<Ingredient>alleIngredienten=  ingredientManager.getAllIngredients();
-        model.addAttribute("alleIngredienten",alleIngredienten);
-
-
-        if(bindingResult.hasErrors()){
-
-            List<String> error=new ArrayList<>();
-       bindingResult.getAllErrors().forEach(err->error.add(err.getDefaultMessage()));
-
-
+        List<Ingredient> allIngredients = ingredientService.getAllIngredients();
+        model.addAttribute("alleIngredienten", allIngredients);
+        if (bindingResult.hasErrors()) {
+            List<String> error = new ArrayList<>();
+            bindingResult.getAllErrors().forEach(err -> error.add(err.getDefaultMessage()));
             model.addAttribute("validationError", error);
-
             return new ModelAndView("Products/newProduct", (Map<String, ?>) model);
-
         }
-if(product.getComposition().size()!=product.getComposition().stream().distinct().toList().size()){
-    product.getComposition().remove(product.getComposition().size()-1);
-    product.getAmounts().remove(product.getAmounts().size()-1);
-}
-
-        productManager.saveOrUpdate(product);
-if(this.returnUrl.contains("batch")){
-
-    return new ModelAndView("redirect:/batch");
-}
-
+        if (product.getComposition().size() != product.getComposition().stream().distinct().toList().size()) {
+            product.getComposition().remove(product.getComposition().size() - 1);
+            product.getAmounts().remove(product.getAmounts().size() - 1);
+        }
+        productService.saveOrUpdate(product);
+        if (this.returnUrl.contains("batch")) {
+            return new ModelAndView("redirect:/batch");
+        }
         return new ModelAndView("redirect:/products", (Map<String, ?>) model);
     }
-    @PostMapping(value="/products/create", params="stap")
-    public ModelAndView AddStep(Model model, Product product) {
+
+    @PostMapping(value = "/products/create", params = "stap")
+    public ModelAndView addStep(Model model, Product product) {
         product.getSteps().add("");
         model.addAttribute("product", product);
-        List<Ingredient>alleIngredienten=  ingredientManager.getAllIngredients();
-        model.addAttribute("alleIngredienten",alleIngredienten);
-
+        List<Ingredient> allIngredients = ingredientService.getAllIngredients();
+        model.addAttribute("alleIngredienten", allIngredients);
 
         return new ModelAndView("Products/newProduct", (Map<String, ?>) model);
     }
-    @PostMapping(value="/products/create", params="addIng")
-    public ModelAndView AddIng(Model model, Product product) {
-        List<Ingredient> alleIngredienten = ingredientManager.getAllIngredients();
-        if(product.getComposition().stream().distinct().toList().size()!=product.getComposition().size()){
-         model.addAttribute("error","this ingredient is already part of the recepy");
+
+    @PostMapping(value = "/products/create", params = "addIng")
+    public ModelAndView addIng(Model model, Product product) {
+        List<Ingredient> allIngredients = ingredientService.getAllIngredients();
+        if (product.getComposition().stream().distinct().toList().size() != product.getComposition().size()) {
+            model.addAttribute("error", "this ingredient is already part of the recepy");
         } else if
-        (alleIngredienten.size()>0){
-            product.getComposition().add(alleIngredienten.get(0));
+        (!allIngredients.isEmpty()) {
+            product.getComposition().add(allIngredients.get(0));
             product.getAmounts().add(0.0);
         }
-
-
-
-
         model.addAttribute("product", product);
-        model.addAttribute("alleIngredienten", alleIngredienten);
-
+        model.addAttribute("alleIngredienten", allIngredients);
         return new ModelAndView("Products/newProduct", (Map<String, ?>) model);
-
-
     }
-    @PostMapping(value="/products/create", params ="removeIng" )
-    public ModelAndView RemoveIng(Model model, Product product, @RequestParam(name = "removeIng") int removeIng) {
+
+    @PostMapping(value = "/products/create", params = "removeIng")
+    public ModelAndView removeIng(Model model, Product product, @RequestParam(name = "removeIng") int removeIng) {
         product.getAmounts().remove(removeIng);
         product.getComposition().remove(removeIng);
         model.addAttribute("product", product);
-        List<Ingredient> alleIngredienten=ingredientManager.getAllIngredients();
-        model.addAttribute("alleIngredienten",alleIngredienten);
+        List<Ingredient> allIngredients = ingredientService.getAllIngredients();
+        model.addAttribute("alleIngredienten", allIngredients);
         return new ModelAndView("Products/newProduct", (Map<String, ?>) model);
     }
 
-    @PostMapping(value="/products/create", params ="removeStep" )
-    public ModelAndView RemoveStep(Model model, Product product, @RequestParam(name = "removeStep") int removeStep) {
+    @PostMapping(value = "/products/create", params = "removeStep")
+    public ModelAndView removeStep(Model model, Product product, @RequestParam(name = "removeStep") int removeStep) {
         product.getSteps().remove(removeStep);
         model.addAttribute("product", product);
-        List<Ingredient> alleIngredienten=ingredientManager.getAllIngredients();
-        model.addAttribute("alleIngredienten",alleIngredienten);
+        List<Ingredient> allIngredients = ingredientService.getAllIngredients();
+        model.addAttribute("alleIngredienten", allIngredients);
         return new ModelAndView("Products/newProduct", (Map<String, ?>) model);
     }
 
 
-
-@GetMapping("/products/final/{productId}")
-public RedirectView MakeFinal(@PathVariable int productId, RedirectAttributes redirectAttributes) throws JsonProcessingException {
-
-Optional<Product> optioneelProduct=productManager.getProductById(productId);
-
-if(optioneelProduct.isPresent()){
-    Product product =optioneelProduct.get();
-    product.set_ProductStatus(ProductState.Finaal);
-    rabbitSender.sendNewRecipe(product);
-    productManager.saveOrUpdate(product);
-
-}
-else{
-
-    redirectAttributes.addFlashAttribute("error","The requested product could not been found");
-
-}
-
-    return new RedirectView("/products");
-
-}
+    @GetMapping("/products/final/{productId}")
+    public RedirectView makeFinal(@PathVariable int productId, RedirectAttributes redirectAttributes) throws JsonProcessingException {
+        Optional<Product> optionalProduct = productService.getProductById(productId);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            product.set_ProductStatus(ProductState.FINAL);
+            rabbitSender.sendNewRecipe(product);
+            productService.saveOrUpdate(product);
+        } else {
+            redirectAttributes.addFlashAttribute("error", "The requested product could not been found");
+        }
+        return new RedirectView("/products");
+    }
 
     @GetMapping("/products/deactivate/{productId}")
-    public String Deactivate(@PathVariable int productId) throws JsonProcessingException {
-
-        Optional<Product> optioneelProduct=productManager.getProductById(productId);
-
-        if(optioneelProduct.isPresent()){
-            Product product =optioneelProduct.get();
-            product.set_ProductStatus(ProductState.Gedeactiveerd);
+    public String deactivate(@PathVariable int productId) throws JsonProcessingException {
+        Optional<Product> optionalProduct = productService.getProductById(productId);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            product.set_ProductStatus(ProductState.DEACTIVATED);
             rabbitSender.sendNewRecipe(product);
-            productManager.saveOrUpdate(product);
-
+            productService.saveOrUpdate(product);
         }
-
         return "redirect:/products";
-
-
-
-
     }
 
 
-@GetMapping("/products/detail/{productId}")
-    public ModelAndView DetailPage(@PathVariable Long productId, ModelMap model,RedirectAttributes redirectAttributes){
-
-
-     Optional<Product>optionalProduct=   productManager.getProductById(productId);
-        if(optionalProduct.isPresent()){
-            model.addAttribute("product",optionalProduct.get());
-
-            return new ModelAndView("Products/productDetail", (Map<String, ?>) model);
+    @GetMapping("/products/detail/{productId}")
+    public ModelAndView detailPage(@PathVariable Long productId, ModelMap model, RedirectAttributes redirectAttributes) {
+        Optional<Product> optionalProduct = productService.getProductById(productId);
+        if (optionalProduct.isPresent()) {
+            model.addAttribute("product", optionalProduct.get());
+            return new ModelAndView("Products/productDetail", model);
+        } else {
+            redirectAttributes.addFlashAttribute("error", "the requested product could not been found");
+            return new ModelAndView("redirect:/products", model);
         }
+    }
 
-        else {
-        redirectAttributes.addFlashAttribute("error","the requested product could not been found");
-
-        return new ModelAndView("redirect:/products", (Map<String, ?>) model);}
-
-
-
-
-
-        }
-
-    @GetMapping(value="**")
-    public String NotFoundPage(){
+    @GetMapping(value = "**")
+    public String notFoundPage() {
         return "NotFound";
     }
 }

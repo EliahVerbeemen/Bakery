@@ -2,6 +2,8 @@ package kdg.be.Models;
 
 public enum PreparationState {
 
-    NietGebakken,BakkenGestart,BakkenBeindigt
+    NOT_BAKED,
+    BAKING_STARTED,
+    BAKED
 
 }

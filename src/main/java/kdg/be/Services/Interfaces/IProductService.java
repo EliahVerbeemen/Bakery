@@ -1,15 +1,16 @@
-package kdg.be.Services.Repositories;
+package kdg.be.Services.Interfaces;
 
 import kdg.be.Models.Product;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface IProductManager {
-    public Optional<Product> getProductById(long id);
-    public Product saveProduct(Product product);
+public interface IProductService {
+    Optional<Product> getProductById(long id);
 
-    public List<Product> getAllProducts();
+    Product saveProduct(Product product);
 
-    public Product saveOrUpdate(Product product);
+    List<Product> getAllProducts();
+
+    Product saveOrUpdate(Product product);
 }

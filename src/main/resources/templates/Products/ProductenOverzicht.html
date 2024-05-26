@@ -24,14 +24,14 @@
     <td th:text="${product.name}"></td>
        <td>
        <div th:switch="${product.productStatus}">
-           <div th:case="${T(kdg.be.Models.ProductState).Nieuw}">
+           <div th:case="${T(kdg.be.Models.ProductState).NEW}">
 
                <button th:attr="onclick=${' ToonBewerkPagina('+  product.getProductId() +')'}"  >Bewerken</button>
                <span th:if="${product.steps.size()>=3&&product.composition.size()>=2&&product.name.length()>=3}">
                <button th:attr="onclick=${' MakeFinal('+  product.getProductId() +')'}"  >Make Final</button>
            </span>
        </div>
-           <button th:attr="onclick=${' Deactivate('+  product.getProductId() +')'}" th:case="${T(kdg.be.Models.ProductState).Finaal}" >Deactivate</button>
+           <button th:attr="onclick=${' Deactivate('+  product.getProductId() +')'}" th:case="${T(kdg.be.Models.ProductState).FINAL}" >Deactivate</button>
 
        </div>
        </td>
