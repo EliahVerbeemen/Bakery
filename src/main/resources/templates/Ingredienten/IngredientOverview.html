@@ -5,6 +5,13 @@
   <title >Ingrediënten</title>
 </head>
 <body>
+<nav>
+    <button th:onclick="GoToProducts()">Products</button>
+    <button th:onclick="GoToIngredients()">Ingredients</button>
+    <button th:onclick="GoToBatches()">Batches</button>
+
+
+</nav>  
 <table>
   <thead>
   <tr><td>Naam</td><td>Beschrijving</td></tr>
@@ -87,6 +94,26 @@
     window.location.href="/ingredienten/verwijderen/"+productId;
 
   }
+
+   function GoToProducts(){
+
+
+        window.location.href= "/products";
+
+    }
+
+    function GoToIngredients(){
+
+
+        window.location.href= "/ingredienten";
+
+    }
+    function GoToBatches(){
+
+
+        window.location.href= "/batch";
+
+    }
 
 </script>
 
