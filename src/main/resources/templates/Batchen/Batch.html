@@ -5,7 +5,13 @@
     <title>Batch</title>
 </head>
 <body>
+<nav>
+    <button th:onclick="GoToProducts()">Products</button>
+    <button th:onclick="GoToIngredients()">Ingredients</button>
+    <button th:onclick="GoToBatches()">Batches</button>
 
+
+</nav>
 <table>
 
     <tr>  <th>Not yet prepared</th></tr>
@@ -95,6 +101,26 @@
     function ToonBewerkPagina(productId){
 
         window.location.href="/products/create/"+productId
+
+    }
+
+ function GoToProducts(){
+
+
+        window.location.href= "/products";
+
+    }
+
+    function GoToIngredients(){
+
+
+        window.location.href= "/ingredienten";
+
+    }
+    function GoToBatches(){
+
+
+        window.location.href= "/batch";
 
     }
 
