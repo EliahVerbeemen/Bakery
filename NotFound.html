@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page not found</title>
+</head>
+<body>
+<h1>Sorry, there is no page on this address</h1>
+<div>
+    <button th:attr="onclick=${' GoToProducts()'}">Products</button>
+    <button th:attr="onclick=${' GoToIngredients()'}">Ingredients</button>
+    <button th:attr="onclick=${' GoToBatches()'}">Batches</button>
+
+</div>
+<script th:inline="javascript">
+
+    function GoToProducts(){
+
+
+        window.location.href= "/products";
+
+    }
+
+    function GoToIngredients(){
+
+
+        window.location.href= "/ingredienten";
+
+    }
+    function GoToBatches(){
+
+
+        window.location.href= "/batch";
+
+    }
+
+</script>
+</body>
+</html>
